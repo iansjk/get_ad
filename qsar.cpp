@@ -163,6 +163,32 @@ REALNUM_TYPE QSAR::q2etc(apvector<REALNUM_TYPE> &V_OBS, apvector<REALNUM_TYPE> &
 	return (1.0 - vl);
 }
 
+REALNUM_TYPE QSAR::q2F13(apvector<REALNUM_TYPE> &EXT_OBS, apvector<REALNUM_TYPE> &EXT_PRED, REALNUM_TYPE REF, UNSIGNED_1B_TYPE ST_MODE)
+/*Calculates "F1" and "F3" versions of Q2 for external sets (Consonni et al, J Chem Inf Model 2009, 49, pp1669-1678)
+ST_MODE:
+		= 0 for F3 (normalization by training set variance),
+		=1 for F1 (normalization by external set variance but using training set mean value)
+REF should contain:
+		RSS of training set (ST_MODE = 0), or 
+		mean observed activity value of the training set (ST_MODE=1)
+
+NB:		Both F1,F3 are training-set dependendent, i.e. same prediction results
+		F1-version is non-additive, and too optimistic if EXT_OBS are very different from the training set mean
+		F3-version is additive, can be reliably calculated even for 1 data point (if REF is not 0)
+		F3-version can be viewed as RMSE normalized by training set variance
+*/
+{	
+	REALNUM_TYPE vl = MSE(EXT_OBS, EXT_PRED);	
+	if (ST_MODE == 0)
+	{
+		if (REF > 0) vl	/=	REF; else vl = 1.0;
+	}
+	else
+		vl /= varianceVext(EXT_OBS, REF, true);
+	
+	return (1.0 - vl);
+}
+
 REALNUM_TYPE QSAR::meanV(apvector<REALNUM_TYPE> &V)
 {	
 	UNSIGNED_4B_TYPE N = V.length();
@@ -213,13 +239,13 @@ REALNUM_TYPE QSAR::varianceVext(apvector<REALNUM_TYPE> &V, REALNUM_TYPE MV, bool
 //calculates variance of V from supplied average value MV
 //if V represents complete finite population then Biased mode can be used
 {
-	UNSIGNED_4B_TYPE N = V.length(), Vx = ZERO;
-	if (N < 2) return 0;
-
+	UNSIGNED_4B_TYPE N = V.length(), Vx = ZERO;	
 	REALNUM_TYPE vl = 0;
 	for (; Vx < N; Vx++)	vl += sqr(V[Vx] - MV);
-	if (Biased) vl /= N; else vl /= (N - 1);
-
+	if (Biased) 
+		vl /= max(1, N); 
+	else 
+		if (N > 1) vl /= (N - 1);
 	return (vl);
 }
 

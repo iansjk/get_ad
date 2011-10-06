@@ -25,7 +25,8 @@ public:
 	REALNUM_TYPE rankcorrel(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &);	
 	REALNUM_TYPE correl(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &);
 	REALNUM_TYPE q2etc(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &, UNSIGNED_1B_TYPE = 0);
-	
+	REALNUM_TYPE q2F13(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &, REALNUM_TYPE REF = 0, UNSIGNED_1B_TYPE = 0);
+
 	REALNUM_TYPE trendline(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &, REALNUM_TYPE &);
 	REALNUM_TYPE trendline0(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &);
 

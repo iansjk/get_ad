@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "qsar.h"
-//HierCluster() in future should return a tree-structure exlicitely, not apvector<apvector<set>>
+//HierCluster() in future should return a tree-structure explicitely, not apvector<apvector<set>>
 
 //-------   memory leaks catcher for the current source-file  --------
 #ifdef ADV_LEAK_CATCHER
@@ -1061,4 +1061,76 @@ void QSAR::remove_unpredicted(apvector<REALNUM_TYPE> &e, apvector<REALNUM_TYPE> 
 	else i++;	
 	e.resize(dpn);
 	p.resize(dpn);
+}
+
+REALNUM_TYPE QSAR::erf(REALNUM_TYPE x)
+/*	approximation of the error function based on
+	Milton Abramowitz and Irene Stegun (1964) 
+	Handbook of Mathematical Functions with Formulas, Graphs, and Mathematical Tables.
+	
+	erf() ~ 1 - (a1*t + a2*t^2 + ... )*exp(-x^2); 	t = 1/(1 + px); 
+	1) for 3 terms: max.err 2.5*10^-5 and p=0.47047, a1=0.3480242, a2=-0.0958798, a3=0.7478556
+	2) for 5 terms: max.err 1.5*10^-7 and p=0.3275911, a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429
+
+	another possibility:
+	erf() ~ sign(x)*sqrt{ 1-exp(-x^2*(4/pi + ax^2)/(1+ax^2)) }, a = 8(pi - 3)/(3pi*(4 - pi)) ~ 0.140012
+	which is very accurate in the neighborhood of 0 and infinity, while the overall max.err is 3.5*10^-4, 
+														max.err can be 1.2*10^-4 if alternative a = 0.147 is used
+*/
+{
+	if (x == 0) return 0;
+	/*
+	const REALNUM_TYPE a	= 0.14001228868666;	//8(pi - 3)/(3pi*(4 - pi))
+	const REALNUM_TYPE Fpi	= 1.27323954473516;	//4/pi	
+	REALNUM_TYPE x2 = x * x;
+	REALNUM_TYPE ret	 = a*x2;
+	x2	*= Fpi + ret;
+	x2	/= 1 + ret;
+	ret = sqrt(1 - exp(-x2)); //for large x2, precision may be lost at 1 - exp() step
+	if (x < 0) return (-ret);
+	return (ret);
+	*/
+	
+	const REALNUM_TYPE p = 0.47047;
+	const REALNUM_TYPE a1= 0.3480242;
+	const REALNUM_TYPE a2=-0.0958798;
+	const REALNUM_TYPE a3= 0.7478556;
+	REALNUM_TYPE t	 = 1;
+	if (x > 0) 
+		t	/= p*x + 1;
+	else
+		t	/= 1 - p*x;
+
+	REALNUM_TYPE t2	 = t * t;
+	
+	REALNUM_TYPE ret = exp(-x*x);
+	ret	*= a1*t + a2*t2 + a3*t2*t;
+	if (x < 0) return ret;
+	return (1.0 - ret);
+}
+
+REALNUM_TYPE QSAR::norm_cdf(REALNUM_TYPE xval, REALNUM_TYPE mu, REALNUM_TYPE sigma)
+// phi, gaussian cumulative distribution function based on the above erf() approximation
+//	NB, direct calculation of CDF as 0.5[1 + erf(x2/sqrt2)] is not accurate for large -x 
+//		due to floating number precision issues.
+{
+	if (sigma <= 0) return INVALID;
+
+	REALNUM_TYPE x = xval - mu;
+	if (x == 0) return 0.5;
+
+	x	/= sigma;
+	const REALNUM_TYPE p = 0.3326725;	//0.47047 / sqrt(2);
+	const REALNUM_TYPE a1= 0.1740121;
+	const REALNUM_TYPE a2=-0.0479399;
+	const REALNUM_TYPE a3= 0.3739278;
+	
+	REALNUM_TYPE t	 = 1;
+	if (x > 0)	t /= p*x + 1;	else	t /= 1 - p*x;
+
+	REALNUM_TYPE t2	 = t * t, ret = exp(-x*x/2);
+	ret	*= a1*t + a2*t2 + a3*t2*t;
+	
+	if (x < 0) return ret;
+	return (1.0 - ret);
 }

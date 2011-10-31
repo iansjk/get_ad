@@ -45,6 +45,9 @@ public:
 	REALNUM_TYPE MSE(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &);
 	void centralize(apvector<REALNUM_TYPE> &, REALNUM_TYPE&, REALNUM_TYPE&);
 	
+	REALNUM_TYPE erf(REALNUM_TYPE);	//fast and lossy approximation of the error function
+	REALNUM_TYPE norm_cdf(REALNUM_TYPE, REALNUM_TYPE = 0, REALNUM_TYPE = 1);	//phi(x, mu, sigma), gaussian cumulative distribution function based on the above erf()
+
 	//matrix based algorithms
 	void QR(matrix<REALNUM_TYPE> &, matrix<REALNUM_TYPE> &, matrix<REALNUM_TYPE> &);
 	UNSIGNED_4B_TYPE GetEigenVectors(matrix<REALNUM_TYPE> &, matrix<REALNUM_TYPE> &, matrix<REALNUM_TYPE> &, REALNUM_TYPE = 0.0001, UNSIGNED_4B_TYPE = 100);

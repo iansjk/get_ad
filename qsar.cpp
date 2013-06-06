@@ -219,11 +219,38 @@ REALNUM_TYPE QSAR::maxV(apvector<REALNUM_TYPE> &V)
 		if (vl < V[Vx]) vl = V[Vx];
 	return (vl);
 }
-REALNUM_TYPE QSAR::middleV(apvector<REALNUM_TYPE> &V)
-{
-	REALNUM_TYPE vl = minV(V) + maxV(V);
-	return (vl / 2);
+
+REALNUM_TYPE QSAR::sumV(apvector<REALNUM_TYPE> &V)
+{//added 06.05.2013
+	UNSIGNED_4B_TYPE N = V.length();
+	if (N == ZERO) return ZERO;
+
+	REALNUM_TYPE vl = V[ZERO];
+	for (UNSIGNED_4B_TYPE Vx = 1; Vx < N; Vx++)	vl += V[Vx];
+	return (vl);
 }
+
+REALNUM_TYPE QSAR::middleV(apvector<REALNUM_TYPE> &V)
+{//calculates median, fixed 06.05.2013
+	UNSIGNED_4B_TYPE i = 0, N = V.length();
+	if (N == ZERO) return ZERO;
+	if (N == 1) return V[0];
+	if (N == 2) return ((V[0]+V[1])/2);
+
+	REALNUM_TYPE *F	= GRAB_MEM_BLOCKS(REALNUM_TYPE, N), X;
+	UNSIGNED_4B_TYPE *A = GRAB_MEM_BLOCKS(UNSIGNED_4B_TYPE, N);
+	
+	for (i = 0; i < N; i++){ A[i] = i;	F[i] = V[i]; };	
+	QSortScore = F;	
+	qsort(A, (size_t)N, sizeof(UNSIGNED_4B_TYPE), QSortCompareGreater);
+	i = N >> 1; 
+	if ((i << 1) == N) X = (V[A[i]] + V[A[i+1]])/2; else X = V[A[i]];
+	DROP_MEM_BLOCKS(F);
+	DROP_MEM_BLOCKS(A);
+	QSortScore = NULL;
+	return (X);
+}
+
 REALNUM_TYPE QSAR::absdiffV(apvector<REALNUM_TYPE> &V)
 //calculates sum of absolute differences from average, similar to varianceV
 {

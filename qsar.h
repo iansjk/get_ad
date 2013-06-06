@@ -32,7 +32,8 @@ public:
 
 	REALNUM_TYPE sqrR0(apvector<REALNUM_TYPE> &, apvector<REALNUM_TYPE> &);
 
-	REALNUM_TYPE middleV(apvector<REALNUM_TYPE> &);
+	REALNUM_TYPE middleV(apvector<REALNUM_TYPE> &);	//fixed 06.05.2013
+	REALNUM_TYPE sumV(apvector<REALNUM_TYPE> &);	//added 06.05.2013
 	REALNUM_TYPE maxV(apvector<REALNUM_TYPE> &);
 	REALNUM_TYPE minV(apvector<REALNUM_TYPE> &);
 	REALNUM_TYPE meanV(apvector<REALNUM_TYPE> &);

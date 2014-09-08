@@ -1,10 +1,10 @@
 // *******************************************************************
 //	Revised: Dec 28, 2001		(int size, char ch) constructor added
 //
-//	Revised: March 4, 2001		getline is completely changed and now 
+//	Revised: March 4, 2001		getline is completely changed and now
 //								it reads into the current string
 //								parse_str is added to clean up blanks
-//								and special characters form the 
+//								and special characters form the
 //								head and the tail of the string
 //
 //  Revised: January 13, 1998,  <= and >= redefined using ! and <
@@ -92,7 +92,7 @@ apstring::~apstring()
 //description:   destructor
 //postcondition: string is destroyed
 
-{	
+{
 	delete[] myCstring;                // free memory
 }
 
@@ -206,7 +206,7 @@ void apstring::touppercase()
 
 bool apstring::replace(const apstring strOld, const apstring strNew)
 {//replaces all occurances of strOld with strNew
-	int e = myLength, l = strOld.length(), b = find(strOld);	
+	int e = myLength, l = strOld.length(), b = find(strOld);
 	apstring tmpS, remS(*this);
 	bool done = false;
 
@@ -233,11 +233,11 @@ void apstring::parse_string()
 	while ((b< e) && (iscntrl(myCstring[b]) || isspace(myCstring[b])))
 		b++;
 
-	do	
+	do
 		e--;
 	while ((e > b) && (iscntrl(myCstring[e]) || isspace(myCstring[e])));
 
-	(*this) = substr(b, e-b+1);	
+	(*this) = substr(b, e-b+1);
 }
 
 void apstring::getline(istream &is)
@@ -246,16 +246,16 @@ void apstring::getline(istream &is)
 //post condition:	a line from the stream is read into the string
 {
     char ch;
-    (*this) = "";    // empty string, will build one char at-a-time	
-	is.get(ch);	
-	if (int(ch) < 0) ch = '?';	//replace wrong characters, 2006-2009 Aug	
+    (*this) = "";    // empty string, will build one char at-a-time
+	is.get(ch);
+	if (int(ch) < 0) ch = '?';	//replace wrong characters, 2006-2009 Aug
     if (! is.fail())
     while (! is.fail() && !iscntrl(ch))
     {
         (*this) += ch;
         is.get(ch);
 		if (int(ch) < 0) ch = '?';
-    }     
+    }
 }
 
 void apstring::getlinewithtabs(istream &is)
@@ -264,17 +264,17 @@ void apstring::getlinewithtabs(istream &is)
 //post condition:	a line from the stream is read into the string
 {
     char ch;
-    (*this) = "";    // empty string, will build one char at-a-time	
+    (*this) = "";    // empty string, will build one char at-a-time
 	is.get(ch);
 	if (int(ch) < 0) ch = '?';	//replace wrong characters, 2006-2009 Aug
-    if (! is.fail())    
+    if (! is.fail())
         while (! is.fail() && ((!iscntrl(ch)) || (ch == char(9))))
         {
             (*this) += ch;
             is.get(ch);
 			if (int(ch) < 0) ch = '?';
-        } 
-    
+        }
+
 }
 
 const char * apstring::c_str() const
@@ -352,7 +352,7 @@ istream& operator >>(istream & is, apstring & str)
 
         if (isspace(ch))    // put whitespace back on the stream
         {
-            is.putback(ch);     
+            is.putback(ch);
         }
     }
 

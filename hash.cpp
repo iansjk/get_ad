@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////
 template <class HashValueType>
 hash<HashValueType>::hash()
-{	
+{
 	nHASH = ZERO;
 	FixedExpand = DEF_FIXED_EXPAND;
 	FlexbExpand = DEF_FLEXB_EXPAND;
@@ -37,7 +37,7 @@ hash<HashValueType>::hash(UNSIGNED_4B_TYPE fix, REALNUM_TYPE flex)
 template <class HashValueType>
 hash<HashValueType>::hash(const hash & Hh)
 : HASH(Hh.HASH), KEYS(Hh.KEYS), INX(Hh.INX)
-{	
+{
 	nHASH		= Hh.nHASH;
 	FixedExpand = Hh.FixedExpand;
 	FlexbExpand = Hh.FlexbExpand;
@@ -45,7 +45,7 @@ hash<HashValueType>::hash(const hash & Hh)
 
 template <class HashValueType>
 hash<HashValueType>::~hash()
-{	
+{
 }
 
 template <class HashValueType>
@@ -70,7 +70,7 @@ UNSIGNED_4B_TYPE hash<HashValueType>::FindHashKeyPoz(HashValueType V)
 
 	if (KEYS[a] >= V)			//correction for a deadlock
 		return a;
-	
+
 	return e;
 }
 
@@ -81,14 +81,14 @@ UNSIGNED_4B_TYPE hash<HashValueType>::FindHashKey(HashValueType V)
 {
 	UNSIGNED_4B_TYPE a = ZERO;
 
-	if (nHASH == ZERO)	
+	if (nHASH == ZERO)
 		return ZERO;
 
 	a = FindHashKeyPoz(V);
 
 	if (nHASH == a)
 		return nHASH;
-	
+
 	if (KEYS[a] != V)
 		return nHASH;
 
@@ -99,12 +99,12 @@ template <class HashValueType>
 void hash<HashValueType>::AddRecord(UNSIGNED_4B_TYPE Index)
 //description:		adds Index as a new hash-element into a proper devision,
 //					for that hashFunction is called
-{	
+{
 	HashValueType Rv = hashFunction(Index);
 	UNSIGNED_4B_TYPE i, Poz, Key = FindHashKey(Rv);
-	
+
 	if (Key == nHASH)
-	{		
+	{
 		if ( nHASH == UNSIGNED_4B_TYPE(HASH.length()) )
 		{
 			UNSIGNED_4B_TYPE E = (UNSIGNED_4B_TYPE)FlexbExpand*nHASH;
@@ -129,18 +129,18 @@ void hash<HashValueType>::AddRecord(UNSIGNED_4B_TYPE Index)
 		nHASH++;
 	}
 
-	HASH[Key].Insert(Index);	
+	HASH[Key].Insert(Index);
 }
 
 template <class HashValueType>
 UNSIGNED_4B_TYPE hash<HashValueType>::RetrieveRecord(UNSIGNED_4B_TYPE KeyIndex, UNSIGNED_4B_TYPE &Index)
 //description:		operates on the local hash-list for the hash-entry KeyIndex
 //					i.e. a current hash-element is retrieved and returned
-//precondition:		
+//precondition:
 //postcondition:	returns size of the list, and the current element in Index
 {
 	UNSIGNED_4B_TYPE N = nHASH, Sz = ZERO;
-	
+
 	if (KeyIndex < N)
 	{
 		Sz = HASH[KeyIndex].Size();
@@ -166,13 +166,13 @@ void hash<HashValueType>::SaveHash(FILE * hf)
 //description:		saves hash table into a binary file
 //precondition:		hf must be open for writing in binary mode
 {
-	UNSIGNED_4B_TYPE x, hi, 
+	UNSIGNED_4B_TYPE x, hi,
 		bsz = sizeof(HashValueType), hsz = sizeof(UNSIGNED_4B_TYPE);
-	
+
 	fwrite(&bsz, hsz, 1, hf);							//datablock size
 	fwrite(&FixedExpand, hsz, 1, hf);					//FixedExpand
 	fwrite(&FlexbExpand, sizeof(REALNUM_TYPE), 1, hf);	//FlexbExpand;
-	 
+
 	fwrite(&nHASH, hsz, 1, hf);//# hash entries
 	for (x = ZERO; x < nHASH; x++)
 	{
@@ -207,7 +207,7 @@ bool hash<HashValueType>::LoadHash(FILE * hf)
 
 	fread(&FixedExpand, hsz, 1, hf);					//FixedExpand
 	fread(&FlexbExpand, sizeof(REALNUM_TYPE), 1, hf);	//FlexbExpand;
-	 
+
 	fread(&nHASH, hsz, 1, hf);//# hash entries
 	KEYS.resize(nHASH);
 	INX.resize(nHASH);
@@ -219,10 +219,10 @@ bool hash<HashValueType>::LoadHash(FILE * hf)
 	}
 
 	for (x = ZERO; x < nHASH; x++)
-	{		
+	{
 		fread(&bsz, hsz, 1, hf);
 		while (bsz)
-		{			
+		{
 			fread(&hi, hsz, 1, hf);
 			HASH[x].Insert(hi);
 			bsz--;

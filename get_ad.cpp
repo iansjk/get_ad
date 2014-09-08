@@ -1,17 +1,17 @@
-/* get_ad.cpp Sept 19 2011 - 
-Console application (Linux, Windows). 
+/* get_ad.cpp Sept 19 2011 -
+Console application (Linux, Windows).
 
 Based on dataset-class
 TODO:
 
-DONE: 
+DONE:
 
 (history list of recent changes)
 1.20			July 20 2011	output expanded to report modeling set stats and all settings
 								'-AV=' and '-SD=' command keys added to allow recycling of modeling stats
 
 1.01			Sep 20 2011		Basic version completed
-			
+
 Tested with:
 MRP5x_moe_n_mdl1 -K=5 -F=A -2PART -Z=0.5
 MRP5x_moe_n_mdl1 -4PRED=MRP5x_moe_n_ext1.xa -K=3 -F=H -2PART -Z=0.0
@@ -85,7 +85,7 @@ SIGNED_2B_TYPE LoadDataset(dataset &dtstD, STRING_TYPE &stName)
 			stMTX	 += ".xa";
 		fiTest.close();
 	}
-	
+
 	FILETYPE_IN fiXAfile(stName.c_str());
 	if (fiXAfile.eof() || fiXAfile.fail())
 	{
@@ -124,18 +124,18 @@ void PrintHelp()
 	cout << "Usage:  get_ad mdlfile [flags] or get_ad mdlfile -4PRED=tstfile [flags]" << endl;
 	cout << "Input: .xa, .x or .svm model files; Output: " << AD_FILE << " file" << endl << endl;
 
-	cout << "Possible flags are:    '-OUT=' output file name" << endl;	
+	cout << "Possible flags are:    '-OUT=' output file name" << endl;
 	cout << "'-4PRED=' test file to calc AD against modeling set, " << endl;
 	cout << "if test not set, self-AD of the modeling set is reported." << endl;
 	cout << "'-2PART' - outputs in and out of AD parts as separate files" << endl << endl;
 
 	cout << "'-K=' - number of nearest neighbors to use <def. 1>" << endl;
-	cout << "'-Z=' - z-score cut-off to use <def. 1.0>" << endl;		
+	cout << "'-Z=' - z-score cut-off to use <def. 1.0>" << endl;
 	cout << "'-M=dx' = Metric to use; x - is a power coff. <def. 2.0>" << endl;
 	cout << "d: E -Euclidean <def.>, T -Tanimoto, R -Correl, C -Cosine" << endl << endl;
-	
+
 	cout << "'-D2AD' - to use squared distances <def.>; '-D1AD' - direct distances" << endl;
-	cout << "'-F=..' - applicability domain filtering modes: " << endl;				
+	cout << "'-F=..' - applicability domain filtering modes: " << endl;
 	cout << "'M' - av.dist to k neighbors should be within AD (traditional)" << endl;
 	cout << "'A' - all k neighbors should be within AD" << endl;
 	cout << "'H' - half neighbors within AD, 'L' - at least 1 within AD <def.>" << endl << endl;
@@ -144,12 +144,12 @@ void PrintHelp()
 void ProcessArgumentString(STRING_TYPE &S)
 {
 	REALNUM_TYPE rtX;
-	
+
 	S.parse_string();
 	STRING_TYPE stX = S;
 	S.touppercase();
 
-	SIGNED_4B_TYPE intX, intU = S.find("-OUT="); 
+	SIGNED_4B_TYPE intX, intU = S.find("-OUT=");
 	if (intU == 0)
 	{//output file
 		stOutput = stX.substr(intU + 5, stX.length());
@@ -179,7 +179,7 @@ void ProcessArgumentString(STRING_TYPE &S)
 	intU = S.find("-Z="); //Z-cut-off
 	if (intU == 0)
 	{
-		stX = S.substr(intU + 3, S.length());		
+		stX = S.substr(intU + 3, S.length());
 		rtX = atof( stX.c_str() );
 		AD_Z  = rtX;
 		return;
@@ -202,16 +202,16 @@ void ProcessArgumentString(STRING_TYPE &S)
 	intU = S.find("-K="); //sets k or R; e.g. -KR=1@9 -KR=0.5
 	if (intU == 0)
 	{
-		stX = S.substr(intU + 3, S.length());		
+		stX = S.substr(intU + 3, S.length());
 		intX = atoi( stX.c_str() );
-		if (intX > 0) AD_K = intX;		
+		if (intX > 0) AD_K = intX;
 		return;
 	}
 
 	intU = S.find("-F="); //applicability domain settings, e.g. -AD=0.5 or -AD=0.5d1 or -AD=0.5_avk
 	if (intU == 0)
 	{
-		stX = S.substr(intU + 3, S.length());		
+		stX = S.substr(intU + 3, S.length());
 		if (S[intU + 3] == 'M') AD_MODE = 0;
 		if (S[intU + 3] == 'A') AD_MODE = 3;
 		if (S[intU + 3] == 'H') AD_MODE = 2;
@@ -245,47 +245,47 @@ bool VerifyDescriptors(dataset &A, dataset &B)
 	if (B.get_Ndimensions() != dn) return false;
 
 	for (SIGNED_4B_TYPE i = 0; i < dn; i++)
-		if (i == B.get_dscr_pos(A.get_dscr(i))) 
+		if (i == B.get_dscr_pos(A.get_dscr(i)))
 			continue;
 		else
 			return false;
-	
+
 	return true;
 }
 
 int main(int argc, char* argv[])
-{	
-	if (argc < 2) 
+{
+	if (argc < 2)
 	{
-		PrintHelp();	
+		PrintHelp();
 		return 0;
 	}
-	
+
 	stInput = argv[1];
-	
+
 	//temporary service variables
 	STRING_TYPE stTime, stArg, stJ = "command line: get_ad ";
 	GetTimeStamp(stTime);
 
-	dataset datasetX, datasetC;	
+	dataset datasetX, datasetC;
 	SIGNED_2B_TYPE inMTX = LoadDataset(datasetX, stInput); //save input matrix format
-		
+
 	if (inMTX == -1)
 	{
 		cout << "Can not load data from input file." << endl;
 		return -1;
 	}
-	
-	SIGNED_4B_TYPE i = 1;	
+
+	SIGNED_4B_TYPE i = 1;
 	stJ += argv[i];
 	//---------------------------------------------------------
 	while (argc > ++i)
-	{ 
+	{
 		stArg = argv[i];
 		stJ += BLANK;
 		stJ += stArg;
 		ProcessArgumentString(stArg);
-	}//while (argc > ++nArg) loop	
+	}//while (argc > ++nArg) loop
 	//---------------------------------------------------------
 
 	dataset * pD = NULL;
@@ -303,7 +303,7 @@ int main(int argc, char* argv[])
 			cout << "Cannot load data from screening file: " << stScreen << endl;
 			return -1;
 		}
-		
+
 		if ( !VerifyDescriptors(datasetX, datasetC) )
 		{
 			cout << "Descriptors are mismatched in the input and screening files." << endl;
@@ -315,12 +315,12 @@ int main(int argc, char* argv[])
 	//log time and settings:
 	if (stOutput.length() == 0)
 	{
-		if (SelfAD) 
-			stOutput = "SelfAD"; 
-		else 
+		if (SelfAD)
+			stOutput = "SelfAD";
+		else
 		{
 			stOutput = stScreen;
-			CutStrEnding(stOutput);			
+			CutStrEnding(stOutput);
 		}
 		stOutput += "_by_" + stInput;
 		CutStrEnding(stOutput);
@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
 
 	FILETYPE_OUT foAD(stOutput.c_str());
 	foAD << COMMENT << stJ << endl;
-	foAD << COMMENT << "Started at " << stTime << endl;	
+	foAD << COMMENT << "Started at " << stTime << endl;
 
 	//calculate Global AD cut-off
 	datasetX.calc_dist(0, METRIC_V, METRIC_K);
@@ -351,22 +351,22 @@ int main(int argc, char* argv[])
 		else
 			datasetX.get_NearNeibDistances(knn_stats, AD_K, 0, 3);
 	}
-	
+
 	REALNUM_TYPE mnd, f = knn_stats[0] + AD_Z*knn_stats[2];
 	if (D1dist) AD_dist = f; else AD_dist = sqrt(f);
-	foAD << COMMENT << "AD.CUTOFF=" << AD_dist << TAB << "AD.MODE=";	
+	foAD << COMMENT << "AD.CUTOFF=" << AD_dist << TAB << "AD.MODE=";
 	switch (AD_MODE)
-	{		
+	{
 		case 0:	foAD << "mean.dist(NNs)"; break;
 		case 2: foAD << "1/2NNs"; break;
 		case 3: foAD << "allNNs"; break;
 		case 1:	default:	foAD << "1NN"; break;
 	}
 	foAD << TAB << "DIST.MODE=" << (D1dist ? "REGULAR" : "SQUARED");
-	foAD << TAB << "MEAN=" << knn_stats[0] << TAB << "SD=" << knn_stats[2] << TAB << "#NN=" << UNSIGNED_2B_TYPE(AD_K);	
+	foAD << TAB << "MEAN=" << knn_stats[0] << TAB << "SD=" << knn_stats[2] << TAB << "#NN=" << UNSIGNED_2B_TYPE(AD_K);
 	foAD << TAB << "DIST.METRIC=";
 	switch (METRIC_K)
-	{		
+	{
 		case 1:	foAD << "Cosine"; break;
 		case 2: foAD << "Correlation"; break;
 		case 3: foAD << "Tanimoto"; break;
@@ -396,7 +396,7 @@ int main(int argc, char* argv[])
 			for (k = 0; k < AD_K; k++)	kneib[k] = INVALID;	//invalidate k-neighbor distances
 
 			pD->get_DimValues(i, dsx);
-			datasetX.add_dp(dsx);			
+			datasetX.add_dp(dsx);
 
 			for (j = 0; j < bn; j++)
 			{//store k nearest distances
@@ -409,8 +409,8 @@ int main(int argc, char* argv[])
 						for (l = k+1; l < AD_K; l++)
 							kneib[l] = kneib[l-1];
 					}
-					kneib[k] = f; 
-					break;	
+					kneib[k] = f;
+					break;
 				}// for k
 			}// for j
 
@@ -422,7 +422,7 @@ int main(int argc, char* argv[])
 			case 0: //average dist of k neighbors should be within AD
 				mnd = qsarT.meanV(kneib);
 			break;
-			
+
 			case 2: //half of the neighbors should be within AD
 				k = (AD_K >> 1);
 				if ( AD_K == (k << 1) )
@@ -430,7 +430,7 @@ int main(int argc, char* argv[])
 				else
 					mnd = kneib[k];
 			break;
-			
+
 			case 3: //all of the neighbors should be within AD
 				mnd = kneib[AD_K - 1];
 			break;
@@ -442,26 +442,26 @@ int main(int argc, char* argv[])
 		}//switch (AD_MODE)
 
 		//calculate actual z-score (can be compared with the AD_Z cutoff to define "in" or "out" of AD)
-		if (D1dist) f = mnd; else f = mnd*mnd;		
+		if (D1dist) f = mnd; else f = mnd*mnd;
 		f -= knn_stats[0];
 		f /= knn_stats[2];
-		
+
 		stJ = pD->get_sid(i);
 		sprintf(buff, "%d\t%s\t%6.3f\t%6.3f\t%1d", i, stJ.c_str(), mnd, f, UNSIGNED_1B_TYPE(mnd < AD_dist));
 		stJ = buff;
 		stJ.parse_string();
 		foAD << stJ << endl;
-		
+
 		if (ExplicitReport)
 		{
-			if (mnd < AD_dist) 
-				pD->train.PutInSet(i); 
-			else 
+			if (mnd < AD_dist)
+				pD->train.PutInSet(i);
+			else
 				pD->test.PutInSet(i);
 		}
 	}//for i
-	
-	
+
+
 	if (ExplicitReport)
 	{//save "within-AD" and "out-of-AD" portions into separate files
 		CutStrEnding(stScreen);

@@ -1,5 +1,5 @@
 /*
-TODO: 
+TODO:
 (Add here problems and suggestions to be worked upon)
 
 
@@ -11,11 +11,11 @@ TODO:
 DONE:
 Aug 11 2011
 			isScaled() added for high-level check for the presence of scaling in the dataset
-May 26 2011	
+May 26 2011
 			minor fix in load() to prevent silent handling of over-the-limit entries
 			RemoveLowVarDims() expanded to perform filtering by min.occurrences
 
-Nov 21 2010	
+Nov 21 2010
 			ExpandDescriptors() fixed.
 Oct 4 2010
 			minor fix in rand_split() to make act-independent splits if nActBins = 1
@@ -24,14 +24,14 @@ Aug 20 2010
 			void set_ActValues(apvector<REALNUM_TYPE> &Acts);
 			void set_Act(SIGNED_4B_TYPE dp1, REALNUM_TYPE val);
 			SIGNED_4B_TYPE ExpandDescriptors(dataset &X);
-			
+
 June 20 2010
 			string buffer overflow in save(): Bfr[20] changed to Bfr[100]
 
 May 16 2010
 			R-calculation fix in sfexcl_split()
 
-May 12 2010 
+May 12 2010
 			svm load/save critical fix (dscr indexation was from 0, not from 1)!!
 
 May 5 2010
@@ -42,18 +42,18 @@ April 14 2010
 			 critical fix in scale_dimensions(): vars.A[u] = INVALID; ( was "vars.A = INVALID" );
 April 3 2010
 			 adjusted group size added to lgo_split() to make splits more even.
-March 30 2010 
+March 30 2010
 			 minor fix: RRound() added into lgo_split(), 11 splits were generated instead of 10 for 127 compounds of binary activity
 
-February 2010 
+February 2010
 			  get_DimRowValues() added to retrieve values of a descriptor column
 
 Feb 28 2010	  added:
 			  normalizeby(), scale_dimensions(), reduce_dimensions()
 			  RemoveLowVarDims(), RemoveHiCorrDims()
 			  introduced dependency on qsar-class
-				
-December 2009 Minor fix for descriptor checking in load() 
+
+December 2009 Minor fix for descriptor checking in load()
 			  Fix in get_dscr_pos()
 			  altering load(): ability to load x-file alone, if mtxType=10
 							 skipping empty lines in inside the matrix
@@ -73,7 +73,7 @@ May 25 2008	load() rewritten to tighten security when loading data
 
 //-------   memory leaks catcher for the current source-file  --------
 #ifdef ADV_LEAK_CATCHER
-#ifdef _DEBUG 
+#ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
@@ -126,8 +126,8 @@ void dataset::sort_act()
 	QSortScore = FF;
 	for (; ic < N; ic++)
 	{
-		AA[ic] = ic;	
-		FF[ic] = act[ic]; 
+		AA[ic] = ic;
+		FF[ic] = act[ic];
 	}
 	qsort(AA, (size_t)N, sizeof(SIGNED_4B_TYPE), QSortCompareGreater);
 	DROP_MEM_BLOCKS(FF);
@@ -163,11 +163,11 @@ void dataset::calc_dist_pars()
 {
 	UNSIGNED_4B_TYPE i, i1, N = patt.RowNO();
 	distAv = distMax = distMin = distn0Min = DUMMY_VAL;
-	
+
 	if ((dist.RowNO() != N) || (!dist.IsSquare())) return;
 	REALNUM_TYPE X;
 	for (i = 0; i < N; i++)
-	{		
+	{
 		for (i1 = i + 1; i1 < N; i1++)
 		{
 			X = dist(i, i1);
@@ -178,8 +178,8 @@ void dataset::calc_dist_pars()
 			else
 			{
 				if (distMax < X) distMax = X;
-				if (distMin > X) 
-				{					
+				if (distMin > X)
+				{
 					distMin = X;
 					if (X > 0)	distn0Min = X;
 				}
@@ -227,7 +227,7 @@ void dataset::get_act_bins(apvector<UNSIGNED_4B_TYPE> &abins, UNSIGNED_4B_TYPE n
 	}
 	else
 	{
-		REALNUM_TYPE aBin, aRange; 
+		REALNUM_TYPE aBin, aRange;
 		aRange = get_MaxAct() - get_MinAct();
 		aBin = aRange / nbins;
 		REALNUM_TYPE aPrev = get_MinAct() - aRange, aNext = get_MinAct() + aBin;
@@ -236,7 +236,7 @@ void dataset::get_act_bins(apvector<UNSIGNED_4B_TYPE> &abins, UNSIGNED_4B_TYPE n
 			aNext = (i == nbins-1) ? (get_MaxAct() + aRange) : (get_MinAct() + aBin*(i+1));
 			abins[i] = get_ActPoints(aPrev, aNext).Size();
 			aPrev = aNext;
-		}		
+		}
 	}
 
 	//check abins
@@ -254,7 +254,7 @@ void dataset::get_act_bins(apvector<UNSIGNED_4B_TYPE> &abins, UNSIGNED_4B_TYPE n
 //--------------------------------------------------------------
 void dataset::rand_split(REALNUM_TYPE rtFraction, UNSIGNED_1B_TYPE nActClasses, bool eqlSizeActBin, set *pExcl)
 {
-	rand_split( UNSIGNED_4B_TYPE (act.length() * rtFraction), nActClasses, eqlSizeActBin, pExcl);	
+	rand_split( UNSIGNED_4B_TYPE (act.length() * rtFraction), nActClasses, eqlSizeActBin, pExcl);
 }
 
 void dataset::rand_split(UNSIGNED_4B_TYPE nFraction, UNSIGNED_1B_TYPE nActClasses, bool eqlSizeActBin, set *pExcl)
@@ -262,16 +262,16 @@ void dataset::rand_split(UNSIGNED_4B_TYPE nFraction, UNSIGNED_1B_TYPE nActClasse
 	UNSIGNED_1B_TYPE nBins = max(nActClasses, 1);
 	UNSIGNED_4B_TYPE Nmls = act.length();
 	if (Nmls < 2) return;
-	
+
 	set setSeed(0, Nmls);
 	apvector<SIGNED_4B_TYPE> spnts(sact);
 	UNSIGNED_4B_TYPE i, r, added, currNmls;
-	apvector<UNSIGNED_4B_TYPE> actNmls(nBins, Nmls / nBins), 
+	apvector<UNSIGNED_4B_TYPE> actNmls(nBins, Nmls / nBins),
 	testNmls(nBins, UNSIGNED_4B_TYPE(ceil(REALNUM_TYPE(nFraction) / nBins)) );
-	if (nBins > 1) 
+	if (nBins > 1)
 	{
 		get_act_bins(actNmls, nBins, eqlSizeActBin);
-		for (i = 0; i < nBins; i++)	testNmls[i] = (actNmls[i] * nFraction) / Nmls;		
+		for (i = 0; i < nBins; i++)	testNmls[i] = (actNmls[i] * nFraction) / Nmls;
 		//check testNmls
 		for (r = i = 0; i < nBins; i++) r += testNmls[i];
 		for (i = 0; i < nBins; i++)
@@ -281,11 +281,11 @@ void dataset::rand_split(UNSIGNED_4B_TYPE nFraction, UNSIGNED_1B_TYPE nActClasse
 			if (r > nFraction) { testNmls[i]--; r--; };
 		}
 	}
-	else 
+	else
 		setSeed.GetList(spnts); //no need to use ids sorted by activity, will be activity-independent.
 
-	test.Dump();	
-	for (currNmls = added = i = 0; i < nBins; i++)	
+	test.Dump();
+	for (currNmls = added = i = 0; i < nBins; i++)
 	if (testNmls[i])
 	{
 		Nmls = actNmls[i];
@@ -325,13 +325,13 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 //sphere exclusion implementation with some extra features added to the basic published version
 //ref: Golbraikhm A, Tropsha A et al, J Comp-Aid Mol Design 2003, 17: 241-253
 //There are two ways of calculating sphere's radius R:
-//1) R =  f*(V/N)^1/k, where f is interpreted as Dissimilarity [0.2 .. 5.2]; 
+//1) R =  f*(V/N)^1/k, where f is interpreted as Dissimilarity [0.2 .. 5.2];
 //2) R =  mind.dist + f(max.dist- min.dist), where f should be varied [0 .. 0.25]
 //
 //Parameters:
 //Mode				see the header-file
 //seed				is the set of user-supplied points for seeding, nSeed - number of points to be seeded randomly in addition to that
-//toTest, toTrain	#points from the sphere that are placed, respectively, into test and training set, 
+//toTest, toTrain	#points from the sphere that are placed, respectively, into test and training set,
 //					which is done alternatingly (toTrain #points to training set, then toTest #points to test set, and repeated)
 {
 	UNSIGNED_4B_TYPE C, N = patt.RowNO(), D = patt.ColNO();
@@ -357,9 +357,9 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 	//prepare seeding set
 	if (nSeed)
 	{
-		if ((Mode & SFEXCL_SEED_BYACTS) == SFEXCL_SEED_BYACTS)	
-			rand_split((UNSIGNED_4B_TYPE)nSeed, nSeed); 
-		else 
+		if ((Mode & SFEXCL_SEED_BYACTS) == SFEXCL_SEED_BYACTS)
+			rand_split((UNSIGNED_4B_TYPE)nSeed, nSeed);
+		else
 			rand_split((UNSIGNED_4B_TYPE)nSeed, 1);
 		seed |= test;
 	}
@@ -384,7 +384,7 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 		R = f * (distAv - distMin) + distMin; //distMax is too big to use effectively!
 	else
 	{
-		if ((Mode & SFEXCL_R_BYUSER) == SFEXCL_R_BYUSER) 
+		if ((Mode & SFEXCL_R_BYUSER) == SFEXCL_R_BYUSER)
 			R = f;
 		else
 		{//default
@@ -400,7 +400,7 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 	}
 
 	if (R < distMin) R = distMin;
-	
+
 	//----------------------
 	//prepare R-neiborhood-subsets to speed up splitting
 	lneib Rneibs(N);
@@ -424,7 +424,7 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 	}
 	pnts.rand_shuffle(); //randomize datapoint positions
 	for (Z = 0; Z < SIGNED_4B_TYPE(N - C); Z++)	pnts_i[pnts[Z]] = Z; //store randomized positions
-	
+
 	while (C < N)
 	{//go on as long as there are points to exhaust
 
@@ -450,7 +450,7 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 							if ((Mode & SFEXCL_NEXTSF_STEP1_SUMDIST) == SFEXCL_NEXTSF_STEP1_SUMDIST)
 								rtD += dist(pnts[Z], spnts[Z1]);
 							else
-								if ( ((Mode & SFEXCL_NEXTSF_STEP1_MIN) == SFEXCL_NEXTSF_STEP1_MIN) ^ (dist(pnts[Z], spnts[Z1]) > rtD) )	
+								if ( ((Mode & SFEXCL_NEXTSF_STEP1_MIN) == SFEXCL_NEXTSF_STEP1_MIN) ^ (dist(pnts[Z], spnts[Z1]) > rtD) )
 									rtD = dist(pnts[Z], spnts[Z1]);
 						}
 
@@ -465,7 +465,7 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 					{
 						el1 = 0;
 						for (Z1 = 1; Z1 + C < N; Z1++)
-						if ( ((Mode & SFEXCL_NEXTSF_STEP1_MIN) == SFEXCL_NEXTSF_STEP1_MIN) ^ 
+						if ( ((Mode & SFEXCL_NEXTSF_STEP1_MIN) == SFEXCL_NEXTSF_STEP1_MIN) ^
 							(dist(spnts[Z], pnts[Z1]) > dist(spnts[Z], pnts[el1])) )
 							el1 = Z1;
 
@@ -475,7 +475,7 @@ REALNUM_TYPE dataset::sfexcl_split(set &seed, UNSIGNED_2B_TYPE Mode, REALNUM_TYP
 							el = el1;
 						}
 					}
-				Z = el;	
+				Z = el;
 			}//if ((Mode & SFEXCL_NEXTSF_RAND) == SFEXCL_NEXTSF_RAND) .. else
 
 			el = pnts[Z];
@@ -522,7 +522,7 @@ void dataset::lgo_split(lneib &sLGO, REALNUM_TYPE rtLGO, UNSIGNED_1B_TYPE nActCl
 }
 
 void dataset::lgo_split(lneib &sLGO, UNSIGNED_2B_TYPE nLGO, UNSIGNED_1B_TYPE nActClasses, bool eqlSizeActBin)
-{	
+{
 	sLGO.resize(0);
 	SIGNED_4B_TYPE Z, rep = Round(REALNUM_TYPE(act.length())/nLGO), REM;
 	sLGO.resize(rep);
@@ -597,8 +597,8 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 				im0 = lspl[d].find(':');
 				im2 = atoi(lspl[d].substr(0, im0).c_str());
 				stBfr = lspl[d].substr(im0+1, lspl[d].length());
-				if (im2 > D) 
-				{ 
+				if (im2 > D)
+				{
 					D = im2;
 					patt.SetSize(N, D);
 				}
@@ -630,7 +630,7 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 			sid.ids[n] = pid[n];
 			sid.AddRecord(n);
 		}
-		
+
 		for (d = 0; d < D; d++)
 		{
 			sprintf (Bfr, "SVMDSCR%d", d+1);
@@ -653,11 +653,11 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 
 	//descriptors
 	vars.L.resize(D);
-	line.getlinewithtabs(i); 
+	line.getlinewithtabs(i);
 	line.parse_string();
 	line.replace(axch, xch);
-	while (line.replace(sx, xch));	
-	
+	while (line.replace(sx, xch));
+
 	SplitString(line, xch, lspl);
 	if (lspl.length() < D)
 	{//allows to read first D data-fields only, fixed Dec 3 2009
@@ -680,18 +680,18 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 	//3 extra dimensions are seq#, ID and activity (only in a new format)
 	act.resize(N);
 	if (mtxType == 0) q = 3; else q = 2;
-	for (n = 0; (n < N) && !i.eof(); n++) 
+	for (n = 0; (n < N) && !i.eof(); n++)
 	{
-		do 
+		do
 		{
-			line.getlinewithtabs(i); 
+			line.getlinewithtabs(i);
 			line.parse_string();
 		} while (line.length() == 0); //to skip empty lines within the matrix file
 
 		line.replace(axch, xch);
 		while (line.replace(sx, xch));
-		SplitString(line, xch, lspl);		
-		if (lspl.length() < (D + q)) break;	
+		SplitString(line, xch, lspl);
+		if (lspl.length() < (D + q)) break;
 
 		if (lspl.length() > (D + q)) //May 2011
 			cout << "Line#" << n+1 << " has too many records: " << lspl[0] << " " << lspl[1] << " " << lspl[2] << " ..." << endl;
@@ -707,7 +707,7 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 				act[n] = 0;
 			else
 			{//can check for match with any of id columns in x-file
-				(*i1) >> sid.ids[n]; 
+				(*i1) >> sid.ids[n];
 				(*i1) >> act[n];
 			}
 		}
@@ -717,7 +717,7 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 		for (d = 0; d < D; d++)	patt(n, d) = atof(lspl[d + q].c_str());
 	}
 
-	if (n < N) 
+	if (n < N)
 	{
 		dump();
 		return false;
@@ -731,7 +731,7 @@ bool dataset::load(istream& i, istream *i1, UNSIGNED_1B_TYPE mtxType)
 		{
 			vars.A.resize(D);
 			for (d = 0; (d < D) && !i.eof(); d++) { i >> vars.A[d]; vars.A[d] -= vars.B[d]; };
-			if (d < D) 
+			if (d < D)
 			{
 				vars.A.resize(0);
 				vars.B.resize(0);
@@ -753,7 +753,7 @@ bool dataset::save(ostream& o, ostream *o1, UNSIGNED_1B_TYPE mtxType)
 	if ((mtxType ==1) && (o1 == NULL)) return false;
 
 	SIGNED_4B_TYPE N = patt.RowNO(), D = patt.ColNO(), n, d;
-	
+
 	char Bfr[100], xch = ' ';
 	STRING_TYPE stBfr;
 
@@ -788,7 +788,7 @@ bool dataset::save(ostream& o, ostream *o1, UNSIGNED_1B_TYPE mtxType)
 	for (d = 1; d < D; d++) o << xch << vars.L[d];
 	o << endl;
 
-	for (n = 0; n < N; n++) 
+	for (n = 0; n < N; n++)
 	{
 		o << pid[n] << xch << sid.ids[n]; //seq#, id
 
@@ -796,12 +796,12 @@ bool dataset::save(ostream& o, ostream *o1, UNSIGNED_1B_TYPE mtxType)
 		stBfr = Bfr;
 		stBfr.parse_string();
 
-		if (mtxType == 0) 
+		if (mtxType == 0)
 			o << xch << stBfr; //act
 		else
 			(*o1) << sid.ids[n] << xch << stBfr << endl; //act
 
-		for (d = 0; d < D; d++)  
+		for (d = 0; d < D; d++)
 		{
 			sprintf(Bfr, "%12.6f", patt(n, d));
 			stBfr = Bfr;
@@ -814,7 +814,7 @@ bool dataset::save(ostream& o, ostream *o1, UNSIGNED_1B_TYPE mtxType)
 
 	if (vars.B.length() != D) return true;
 
-	for (d = 0; d < D; d++) 
+	for (d = 0; d < D; d++)
 	{
 		sprintf(Bfr, "%12.6f", vars.B[d]);
 		stBfr = Bfr;
@@ -824,7 +824,7 @@ bool dataset::save(ostream& o, ostream *o1, UNSIGNED_1B_TYPE mtxType)
 	}
 	o << endl;
 
-	for (d = 0; d < D; d++) 
+	for (d = 0; d < D; d++)
 	{
 		sprintf(Bfr, "%12.6f", vars.A[d] + vars.B[d]);
 		stBfr = Bfr;
@@ -846,7 +846,7 @@ dataset dataset::subset(set &Subset)
 	dnew.vars = vars;
 	dnew.act.resize(N);
 	dnew.patt.SetSize(N, D);
-	
+
 	dnew.sid.ids.resize(N);
 	dnew.pid.resize(N);
 	while (n < N)
@@ -960,7 +960,7 @@ REALNUM_TYPE dataset::get_MinNonZeroDistance(SIGNED_4B_TYPE dp)
 }
 
 REALNUM_TYPE dataset::get_MinDistance(SIGNED_4B_TYPE dp)
-//returns minimum distance in the distance-matrix dist() 
+//returns minimum distance in the distance-matrix dist()
 //or DUMMY_VAL if dist-matrix was incorrect
 //NB: min.dist will be 0 if there are overlapping points!
 {
@@ -982,7 +982,7 @@ REALNUM_TYPE dataset::get_MaxDistance(SIGNED_4B_TYPE dp)
 //or DUMMY_VAL if dist-matrix was incorrect
 {
 	if (dp == INVALID)	return distMax;
-	
+
 	SIGNED_4B_TYPE i, N = act.length();
 	if ( (SIGNED_4B_TYPE(dist.ColNO()) != N) || (!dist.IsSquare()) ) return DUMMY_VAL;
 	REALNUM_TYPE rtV = 0;
@@ -1007,7 +1007,7 @@ REALNUM_TYPE dataset::get_AverageDistance(SIGNED_4B_TYPE dp, REALNUM_TYPE cutoff
 	if (dp == INVALID)
 	{//scan whole matrix;
 		if (noCutoff) return distAv;
-		
+
 		for (i = 0; i < N - 1; i++)
 		for (j = i + 1; j < N; j++)
 		{
@@ -1035,7 +1035,7 @@ REALNUM_TYPE dataset::get_Distance(SIGNED_4B_TYPE dp1, SIGNED_4B_TYPE dp2)
 {
 	if ( (dp1 < 0) || (dp2 < 0) ) return DUMMY_VAL;
 	if ( SIGNED_4B_TYPE(min(dist.RowNO(), dist.ColNO())) <  max(dp1, dp2) ) return DUMMY_VAL;
-	
+
 	return dist(dp1, dp2);
 }
 
@@ -1046,7 +1046,7 @@ REALNUM_TYPE dataset::get_indDistance(SIGNED_4B_TYPE dp1, SIGNED_4B_TYPE dp2, se
 
 	SIGNED_4B_TYPE d, D = patt.ColNO();
 	apvector<SIGNED_4B_TYPE> lDims;
-	if (pDims == NULL) 
+	if (pDims == NULL)
 	{
 		lDims.resize(D);
 		for (d = 0; d < D; d++) lDims[d] = d;
@@ -1088,8 +1088,8 @@ void dataset::get_NearNeibDistances(apvector<REALNUM_TYPE> &Stats, UNSIGNED_2B_T
 	UNSIGNED_4B_TYPE j, ln, n = 0;
 	for (i = 0; i < N; i++)
 	{
-		get_NearNeib(i, NNlist, kNeibours, cutoffR);		
-		
+		get_NearNeib(i, NNlist, kNeibours, cutoffR);
+
 		if (ifKstrict) //so as not to copy more than kNeibours-points
 			ln = min(kNeibours, NNlist.length());
 		else
@@ -1111,7 +1111,7 @@ void dataset::get_NearNeibDistances(apvector<REALNUM_TYPE> &Stats, UNSIGNED_2B_T
 	}//for i < N
 
 	v /= n; //needed average
-	
+
 	//now calculate the spread
 	Spread = 0;
 	for (j = 0; j < n; j++)	Spread += sqr(veckNNdists[j] - v);
@@ -1125,7 +1125,7 @@ void dataset::get_NearNeibDistances(apvector<REALNUM_TYPE> &Stats, UNSIGNED_2B_T
 }
 
 void dataset::get_NearNeib(SIGNED_4B_TYPE datap, apvector<SIGNED_4B_TYPE> &NNeibs, UNSIGNED_2B_TYPE kNeibours, REALNUM_TYPE cutoffR)
-//returns array of nearest-neighbours 
+//returns array of nearest-neighbours
 //sorted by their distance to datap from smallest to biggest
 //precondition:	dist() should be filled, distMax should be valid!
 {
@@ -1149,7 +1149,7 @@ void dataset::get_NearNeib(SIGNED_4B_TYPE datap, apvector<SIGNED_4B_TYPE> &NNeib
 	}
 
 	qsort(AA, (size_t)N, sizeof(SIGNED_4B_TYPE), QSortCompareGreater);
-	
+
 	REALNUM_TYPE Rc = cutoffR;
 	if (kNeibours > 0)
 	{//use cut-off from last k-th neighbour
@@ -1158,7 +1158,7 @@ void dataset::get_NearNeib(SIGNED_4B_TYPE datap, apvector<SIGNED_4B_TYPE> &NNeib
 	}
 	else //use a radial cut-off supplied by the user
 		j = 0;
-	
+
 	for (; j < N; j++)
 	if (FF[ AA[j] ] > Rc ) //would recheck one neighbour, the last one
 		break;
@@ -1180,9 +1180,9 @@ void dataset::randomizeY(UNSIGNED_1B_TYPE nActClasses, bool eqlSizeActBin)
 
 	apvector<UNSIGNED_4B_TYPE> abins(nB, N/nB);
 	if (nB > 1) get_act_bins(abins, nB, eqlSizeActBin);
-	
+
 	UNSIGNED_4B_TYPE r, i, ca;
-	for (ca = i = 0; i < nB; i++)	
+	for (ca = i = 0; i < nB; i++)
 	{
 		apvector<REALNUM_TYPE> ract(abins[i]);
 		for (r = 0; r < abins[i]; r++)	ract[r] = act[sact[r + ca]];
@@ -1197,14 +1197,14 @@ void dataset::randomizeY(UNSIGNED_1B_TYPE nActClasses, bool eqlSizeActBin)
 void dataset::reduce_dimensions(set &Dims)
 {//retains only descriptors that are in Dims
 	if (Dims.IsEmpty())  return;
-	
+
 	apvector<SIGNED_4B_TYPE> vecDims;
 	Dims.GetList(vecDims);
 	SIGNED_4B_TYPE d, n, D = vecDims.length(), N = patt.RowNO();
 	if ((SIGNED_4B_TYPE)patt.ColNO() == D) return;
 
 	dataset datasetSub(*this);
-	
+
 	datasetSub.dist.SetSize(0,0);
 	datasetSub.distMax = distMin = distAv = DUMMY_VAL;
 	datasetSub.vars.Wipe();
@@ -1248,7 +1248,7 @@ REALNUM_TYPE dataset::get_OccupVol(REALNUM_TYPE Probe, UNSIGNED_4B_TYPE Estimati
 	SIGNED_4B_TYPE z, d1;
 	for (n = 0; n < N - 1; n++)
 	for (z = n + 1; z < N; z++)
-	if (dist(n, z) < Probe2)	
+	if (dist(n, z) < Probe2)
 	{
 		Rneibs[n].PutInSet(z);
 		if (EstimationMethod) Rneibs[z].PutInSet(n);
@@ -1289,10 +1289,10 @@ REALNUM_TYPE dataset::get_OccupVol(REALNUM_TYPE Probe, UNSIGNED_4B_TYPE Estimati
 					for (z = 0; z < vecRneib.length(); z++)
 					{
 						for (d = 0; d < D; d++)	neibpnt[d] = patt(vecRneib[z], d);
-						if (Probe > getMetricDistance(refpnt, neibpnt, metricV, metricKind))	
+						if (Probe > getMetricDistance(refpnt, neibpnt, metricV, metricKind))
 							break;
 					}
-					if (z < vecRneib.length())	
+					if (z < vecRneib.length())
 						nRefpnts--;
 					refpnt[d1] -= Probe2;
 				} while (--ref2);
@@ -1309,8 +1309,8 @@ REALNUM_TYPE dataset::get_OccupVol(REALNUM_TYPE Probe, UNSIGNED_4B_TYPE Estimati
 		D2 = D >> 1;
 		ref2 = 0;
 		if ((D2 << 1) == D )  v *= 0.5; else { v = Probe; ref2 = 1; };
-		Probe2 *= pi * Probe; //2piR^2		
-		for (d = 1; d <= D2; d++)	
+		Probe2 *= pi * Probe; //2piR^2
+		for (d = 1; d <= D2; d++)
 		{
 			v *= Probe2;
 			v /= REALNUM_TYPE((d << 1) + ref2);
@@ -1400,12 +1400,12 @@ set dataset::get_ActPoints(REALNUM_TYPE lowAct, REALNUM_TYPE hiAct)
 	set setP;
 	SIGNED_4B_TYPE i = 0, N = sact.length();
 
-	for (; i<N; i++) 
+	for (; i<N; i++)
 	{
 		if (lowAct > act[sact[i]]) continue;
 		if (hiAct < act[sact[i]]) break;
 		setP.PutInSet(sact[i]);
-	}	
+	}
 	return (setP);
 }
 
@@ -1422,15 +1422,15 @@ SIGNED_4B_TYPE dataset::get_Ndimensions()
 bool dataset::expandby(dataset &dtstA, bool UseAsTest)
 /*	description:	expands current dataset by data from dtstA;
 	precondition:	dimensions should match
-	postcondition:	dist-matrix is resized to 0; 
+	postcondition:	dist-matrix is resized to 0;
 					NB: datapoints are copied without check of duplicate ids!
 						but dimensions are checked for matching ids!
 
 					returns false if dimensions do not match
-*/				
+*/
 {
 	if (dtstA.get_Ndimensions() != get_Ndimensions()) return false;
-	
+
 	SIGNED_4B_TYPE i, j, nA = dtstA.get_Ndatapoints(), n = get_Ndatapoints(), d = get_Ndimensions();
 
 	apvector<SIGNED_4B_TYPE> di(d);
@@ -1442,12 +1442,12 @@ bool dataset::expandby(dataset &dtstA, bool UseAsTest)
 
 	patt.SetSize(n + nA, d);
 	sid.ids.resize(n + nA);
-	pid.resize(n + nA);	
+	pid.resize(n + nA);
 	act.resize(n + nA);
 	set newTest;
-	
+
 	for (i = 0; i < nA; i++)
-	{		
+	{
 		act[n + i] = dtstA.act[i];
 		pid[n + i] = dtstA.pid[i];
 		sid.ids[n + i] = dtstA.sid.ids[i];
@@ -1481,12 +1481,12 @@ void dataset::add_dp(apvector<REALNUM_TYPE> &dscr, REALNUM_TYPE actdp, STRING_TY
 
 	SIGNED_4B_TYPE i = 0;
 	for (; i < dmn; i++) patt(dp, i) = dscr[i];
-	
+
 	act[dp] = actdp;
 	sact[dp]= dp;
-	
+
 	SIGNED_4B_TYPE nSwap = 0;
-	for (i = 0; i < dp; i++) 
+	for (i = 0; i < dp; i++)
 	if (act[sact[i]] > act[sact[dp]]) Swap(sact[dp], sact[i], nSwap);
 
 	char bb[20];
@@ -1499,10 +1499,10 @@ void dataset::add_dp(apvector<REALNUM_TYPE> &dscr, REALNUM_TYPE actdp, STRING_TY
 void dataset::remove_dp(SIGNED_4B_TYPE dp)
 {
 	SIGNED_4B_TYPE i, dpn = get_Ndatapoints(), dmn = get_Ndimensions();
-	
+
 	dpn--;
 	for (i = 0; i < dpn; i++)	if (sact[i] == dp) break;
-	while (i < dpn) { sact[i] = sact[i+1]; i++; };	
+	while (i < dpn) { sact[i] = sact[i+1]; i++; };
 	if (dp < dpn)
 	{
 		for (i = 0; i < dmn; i++)	patt(dp, i) = patt(dpn, i);
@@ -1538,7 +1538,7 @@ bool dataset::set_distMatr(matrix<REALNUM_TYPE> &DST)
 void dataset::normalizeby(dataset &RF)
 {
 	UNSIGNED_4B_TYPE dz, dnAll = get_Ndimensions(), dn = RF.get_Ndimensions(), dm = get_Ndatapoints();
-	UNSIGNED_4B_TYPE im0, im1, im2;	
+	UNSIGNED_4B_TYPE im0, im1, im2;
 
 	if ( isScaled() ) scale_dimensions(3);	//denormalize back to the original values, if scaling exists! Aug 11 2011
 
@@ -1556,7 +1556,7 @@ void dataset::normalizeby(dataset &RF)
 			{
 				dorder[dz] = im2;
 				break;
-			}			
+			}
 			RF.vars.RetrieveRecord(im1, im2);
 			im0--;
 		}
@@ -1568,7 +1568,7 @@ void dataset::normalizeby(dataset &RF)
 	set	setPM; //dimensions to keep
 	//resort the matrix to comply with specified order in the file!
 	matrix<REALNUM_TYPE>  newpatt(dm, dn);
-	
+
 	for (dz = 0; dz < dnAll; dz++)
 	{
 		if (dorder[dz] == INVALID) continue;
@@ -1581,12 +1581,12 @@ void dataset::normalizeby(dataset &RF)
 }
 
 void dataset::scale_dimensions(UNSIGNED_1B_TYPE scl_mode)
-/* 		scl_mode: 
+/* 		scl_mode:
 (ONLY IF there are NO normalizing coefficients present)
 		0 - range-scaling
 		1 - autoscaling
 (ONLY IF there ARE normalizing coefficients)
-		2 - renormalize using existing coefficients; 
+		2 - renormalize using existing coefficients;
 		3 - denormalize back to original values
 */
 {
@@ -1622,14 +1622,14 @@ void dataset::scale_dimensions(UNSIGNED_1B_TYPE scl_mode)
 		{
 			for (f = 0; f < PN; f++)	apParCol[f] = patt(f, u);
 			if (scl_mode == 1)
-			{//Autoscale			
+			{//Autoscale
 				vars.B[u] = qq.meanV(apParCol);
 				vars.A[u] = qq.stdev(apParCol);
 			}
 			else
 			{//range-scale
 				vars.B[u]	 = qq.minV(apParCol);
-				vars.A[u]	 = qq.maxV(apParCol) - vars.B[u];			
+				vars.A[u]	 = qq.maxV(apParCol) - vars.B[u];
 			}
 		}
 
@@ -1671,7 +1671,7 @@ void dataset::RemoveHiCorrDims(REALNUM_TYPE MaxCorr)
 		for (u1 = u + 1; u1 < nd; u1++)
 		{
 			for (f = 0; f < np; f++)	dv2[f] = patt(f, u1);
-			
+
 			r = qq.correl(dv1, dv2);
 			if (r * r > MaxCorr)
 			{//highly correlated descriptors were found
@@ -1699,7 +1699,7 @@ void dataset::RemoveLowVarDims(REALNUM_TYPE MinVariance, UNSIGNED_2B_TYPE MinOcc
 		for (f = 0; f < np; f++) dv[f] = patt(f, u);
 		mxV = qq.maxV(dv); mnV = qq.minV(dv);
 
-		for (occ0 = occ1 = f = 0; f < np; f++) 
+		for (occ0 = occ1 = f = 0; f < np; f++)
 		{//min.occurrence check
 			if (dv[f] > mnV) occ1++;
 			if (dv[f] < mxV) occ0++;
@@ -1715,26 +1715,26 @@ void dataset::RemoveLowVarDims(REALNUM_TYPE MinVariance, UNSIGNED_2B_TYPE MinOcc
 
 SIGNED_4B_TYPE dataset::ExpandDescriptors(dataset &X)
 /*	Addes descriptor-matrix from X into the current dataset.
-	NB: this may introduce redundant descriptors, 
+	NB: this may introduce redundant descriptors,
 	as well as descriptors that are scaled differently.
 */
 {
 	SIGNED_4B_TYPE r, c, dp = get_Ndatapoints(), dmn = get_Ndimensions(), Xdmn = X.get_Ndimensions();
 
-	if ( dp != X.get_Ndatapoints() ) return INVALID;		//should be the same set of data points		
-	if ( isScaled() != X.isScaled() ) 	return INVALID;		//scaling should match!	
+	if ( dp != X.get_Ndatapoints() ) return INVALID;		//should be the same set of data points
+	if ( isScaled() != X.isScaled() ) 	return INVALID;		//scaling should match!
 
 	/* //as alternative, in case of scaling mismatch, we can undo the scaling:
 		if ( (!isScaled()) && X.isScaled() ) X.scale_dimensions(3);
 		if ( (!X.isScaled()) && isScaled() ) scale_dimensions(3);
 	*/
-	
+
 	//fill up the expanded matrix
 	patt.SetSize(dp, dmn + Xdmn);
-	for (r = 0; r < dp; r++)	
+	for (r = 0; r < dp; r++)
 	for (c = 0; c < Xdmn; c++)
 		patt(r, dmn + c) = X.patt(r, c);
-	
+
 	//merge scaling info
 	if (isScaled())
 	{
@@ -1752,12 +1752,12 @@ SIGNED_4B_TYPE dataset::ExpandDescriptors(dataset &X)
 	vars.L.resize(dmn + Xdmn);
 	for (c = 0; c < Xdmn; c++)
 	{
-		vars.L[dmn + c] = X.vars.L[c];		
-		do 
+		vars.L[dmn + c] = X.vars.L[c];
+		do
 		{
 			a = vars.FindHashKey( vars.hashFunction(dmn + c) );
 			n = vars.RetrieveRecord(a, m);
-			while (n > 0)			
+			while (n > 0)
 			{
 				n--;
 				if ( SIGNED_4B_TYPE(m + 1) > (dmn + c) ) continue;

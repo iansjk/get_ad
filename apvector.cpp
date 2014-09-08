@@ -40,12 +40,12 @@ apvector<itemType>::apvector(int size, const itemType & fillValue)
 // postcondition: vector has a capacity of size items, all of which are set
 //                by assignment to fillValue after default construction
     : mySize(size),
-      myList(0)      
+      myList(0)
 {
 	if (size == 0)
 		return;
 
-	myList = new itemType[size];    
+	myList = new itemType[size];
     for(int k = 0; k < size; k++)
     {
         myList[k] = fillValue;
@@ -62,7 +62,7 @@ apvector<itemType>::apvector(const apvector<itemType> & vec)
 		return;
 
 	myList = new itemType[mySize];
-    
+
         // copy elements
     for(int k = 0; k < mySize; k++)
 	{
@@ -94,7 +94,7 @@ apvector<itemType>::operator = (const apvector<itemType> & rhs)
         if (mySize > 0)
 			myList = new itemType [mySize];         // allocate new storage
 
-         // copy rhs        
+         // copy rhs
         for(int k=0; k < mySize; k++)
         {
             myList[k] = rhs.myList[k];
@@ -161,10 +161,10 @@ void apvector<itemType>::resize(int newSize)
     itemType * newList = NULL;
 	if (newSize > 0)
 	{
-		newList = new itemType[newSize];	
-		for(k=0; k < numToCopy; k++)    
+		newList = new itemType[newSize];
+		for(k=0; k < numToCopy; k++)
 			newList[k] = myList[k];
-	}    
+	}
 
 	if (mySize > 0)
 		delete [] myList;                      // de-allocate old storage
@@ -179,7 +179,7 @@ void apvector<itemType>::rand_shuffle()
 	int c, l, k = (mySize >> 1);
 	itemType T;
 	while (k--)
-	for (c = 0; c < mySize; c++) 
+	for (c = 0; c < mySize; c++)
 	{//swap c with the random element l
 		l = (rand() % mySize);
 		T			 = myList[c];

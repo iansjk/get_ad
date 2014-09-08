@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////
 template <class ListType>
 list<ListType>::list()
-{		
+{
 	CurrentItem = NULL;
 	list_size = ZERO;
 }
@@ -23,7 +23,7 @@ list<ListType>::list(const list<ListType> &L)
 {
 	CurrentItem = NULL;
 	list_size = ZERO;
-	
+
 	while (list_size < L.Size())
 		Insert(L.Prev());
 }
@@ -34,8 +34,8 @@ list<ListType>::~list()
 	if (list_size == ZERO)	return;
 
 	listItem<ListType> *T;
-		
-	//this deleting should be faster than Dump()	
+
+	//this deleting should be faster than Dump()
 	while (list_size > 1)
 	{
 		list_size--;
@@ -43,15 +43,15 @@ list<ListType>::~list()
 		CurrentItem		= CurrentItem->fw_ptr;
 		delete T;	//DROP_MEM_BLOCK(T);
 	}
-	
-	delete CurrentItem;	//DROP_MEM_BLOCK(CurrentItem);	//last item	
+
+	delete CurrentItem;	//DROP_MEM_BLOCK(CurrentItem);	//last item
 }
 
 template <class ListType>
 ListType& list<ListType>::Curr()
 //definition:	returns current item
 //should not be called if list is empty!
-{	
+{
 	return (CurrentItem ->index);
 }
 
@@ -81,16 +81,16 @@ void	list<ListType>::Insert(ListType &Item)
 	listItem<ListType> *NewItem;
 	NewItem = new listItem<ListType>; //GRAB_MEM_BLOCK(listItem<ListType>);
 
-	NewItem->index  = Item;	
-	
+	NewItem->index  = Item;
+
 	if (CurrentItem == NULL)
 	{
 		CurrentItem	= NewItem;
-		NewItem->bk_ptr	= NewItem;	
+		NewItem->bk_ptr	= NewItem;
 		NewItem->fw_ptr	= NewItem;
 	}
 	else
-	{		
+	{
 		NewItem->bk_ptr			= CurrentItem->bk_ptr;
 		CurrentItem->bk_ptr		= NewItem;
 		NewItem->bk_ptr->fw_ptr = NewItem;
@@ -119,13 +119,13 @@ void	list<ListType>::Delete()
 		}
 		else
 		{
-			
+
 			CurrentItem->fw_ptr->bk_ptr		= CurrentItem ->bk_ptr;
 			CurrentItem->bk_ptr->fw_ptr		= CurrentItem ->fw_ptr;
 			T								= CurrentItem ->fw_ptr;
 			delete CurrentItem;	//DROP_MEM_BLOCK(CurrentItem);
 			CurrentItem						= T;
-			
+
 		};
 	};
 }
@@ -138,7 +138,7 @@ unsigned short list<ListType>::Size()
 
 template <class ListType>
 list<ListType> & list<ListType>::operator =(list<ListType> &L)
-{	
+{
 	Dump();
 
 	while (list_size < L.Size())
@@ -170,7 +170,7 @@ void list<ListType>::Dump()
 //////////////////////////////////////////////////////////////////////
 template <class ListType>
 slist<ListType>::slist()
-{		
+{
 	CurrentItem = NULL;
 	list_size = ZERO;
 }
@@ -178,7 +178,7 @@ slist<ListType>::slist()
 template <class ListType>
 slist<ListType>::slist(const slist<ListType> &L)
 {//note, reverses order in the circular list!
-	
+
 	list_size = ZERO;
 	CurrentItem = NULL;
 
@@ -192,8 +192,8 @@ slist<ListType>::~slist()
 	if (list_size == ZERO)	return;
 
 	slistItem<ListType> *T;
-		
-	//this deleting should be faster than Dump()	
+
+	//this deleting should be faster than Dump()
 	while (list_size > 1)
 	{
 		list_size--;
@@ -201,15 +201,15 @@ slist<ListType>::~slist()
 		CurrentItem		= CurrentItem->ptr;
 		delete T;	//DROP_MEM_BLOCK(T);
 	}
-	
-	delete CurrentItem;	//DROP_MEM_BLOCK(CurrentItem);	//last item	
+
+	delete CurrentItem;	//DROP_MEM_BLOCK(CurrentItem);	//last item
 }
 
 template <class ListType>
 ListType& slist<ListType>::Curr()
 //definition:	returns current item
 //should not be called if list is empty!
-{	
+{
 	return (CurrentItem ->index);
 }
 
@@ -229,15 +229,15 @@ void	slist<ListType>::Insert(ListType &Item)
 {
 	slistItem<ListType> *NewItem;
 	NewItem = new slistItem<ListType>;//GRAB_MEM_BLOCK(slistItem<ListType>);
-	
+
 	if (CurrentItem == NULL)
 	{
 		NewItem->index  = Item;
 		CurrentItem		= NewItem;
-		NewItem->ptr	= NewItem;			
+		NewItem->ptr	= NewItem;
 	}
 	else
-	{		
+	{
 		NewItem->ptr			= CurrentItem->ptr;
 		NewItem->index			= CurrentItem->index;
 		CurrentItem->index		= Item;
@@ -267,8 +267,8 @@ void	slist<ListType>::Delete()
 		{
 			T								= CurrentItem ->ptr;
 			CurrentItem->index				= T->index;
-			CurrentItem->ptr				= T->ptr->ptr;			
-			delete T;	//DROP_MEM_BLOCK(T);			
+			CurrentItem->ptr				= T->ptr->ptr;
+			delete T;	//DROP_MEM_BLOCK(T);
 		};
 	};
 }

@@ -4,7 +4,7 @@
 
 //-------   memory leaks catcher for the current source-file  --------
 #ifdef ADV_LEAK_CATCHER
-#ifdef _DEBUG 
+#ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
@@ -27,7 +27,7 @@ apvector<Cpair> A2Corrs;
 apvector<Chain> Corrs;
 
 set OrganicElements, AlkaliMetals, Metals, Halogens, Hbonders,
-AromaticityElements, Group5Elements, Group6Elements, 
+AromaticityElements, Group5Elements, Group6Elements,
 Loc, Deloc, PiBonds, CovBonds,
 HphobResidues, HphilResidues, AmbiResidues, AromResidues;
 
@@ -49,7 +49,7 @@ in case of using similarity-based coeffients, they are transformed into distance
 
 	if (metricFunc == 0)
 	{//Euclidean, general Minkowski
-		for (X = j = 0; j < D; j++)	
+		for (X = j = 0; j < D; j++)
 		{
 			diff = fabs(V1[j] - V2[j]);
 			if (diff == 0)	continue;
@@ -63,9 +63,9 @@ in case of using similarity-based coeffients, they are transformed into distance
 	REALNUM_TYPE rtMean = 0, rtMean1 = 0;
 	if (metricFunc == 2)
 	{//Correlation coff-based. Calculate mean-centered values
-		for (j = 0; j < D; j++)	
+		for (j = 0; j < D; j++)
 		{
-			rtMean += V1[j]; 
+			rtMean += V1[j];
 			rtMean1 += V2[j];
 		}
 		rtMean	/= D;
@@ -93,7 +93,7 @@ in case of using similarity-based coeffients, they are transformed into distance
 	}
 
 	if (X == 0) return 2.0;
-	return (1.0 - pow(X, metricPower));	
+	return (1.0 - pow(X, metricPower));
 }
 
 REALNUM_TYPE RRound(REALNUM_TYPE x)
@@ -104,7 +104,7 @@ REALNUM_TYPE RRound(REALNUM_TYPE x)
 }
 
 SIGNED_4B_TYPE Round(REALNUM_TYPE x)
-{	
+{
 	return ( (SIGNED_4B_TYPE)RRound(x) );
 }
 
@@ -118,23 +118,23 @@ void Load1El(STRING_TYPE F, UNSIGNED_2B_TYPE szATABLE)
 
 	scrll_nxt_s;
 	ATABLE[szATABLE].SHORTNAME = xs; 	scrll_nxt_s;
-	ATABLE[szATABLE].FULLNAME = xs;		scrll_nxt_s;	
+	ATABLE[szATABLE].FULLNAME = xs;		scrll_nxt_s;
 	ATABLE[szATABLE].ATOMIC_NUMBER = atoi(xs.c_str());		scrll_nxt_s;
 	ATABLE[szATABLE].ATOMIC_WEIGHT = atof(xs.c_str());		scrll_nxt_s;
 	ATABLE[szATABLE].ATOMIC_RADIUS = atof(xs.c_str());		scrll_nxt_s;
 	ATABLE[szATABLE].ATOMIC_ENGTV = atof(xs.c_str());		scrll_nxt_s;
 	ATABLE[szATABLE].ATOMIC_IP1 = atof(xs.c_str());			scrll_nxt_s;
 	ATABLE[szATABLE].ATOMIC_IP2 = atof(xs.c_str());			scrll_nxt_s;
-	
-	//read valencies	
+
+	//read valencies
 	j = atoi(xs.c_str());
 	ATABLE[szATABLE].STATES.resize(j);
 
 	for (i = 0; i< j; i++)
 	{
 			scrll_nxt_s;
-			ATABLE[szATABLE].STATES[i].VAL = (UNSIGNED_1B_TYPE)atoi(xs.c_str());	
-			scrll_nxt_s;			
+			ATABLE[szATABLE].STATES[i].VAL = (UNSIGNED_1B_TYPE)atoi(xs.c_str());
+			scrll_nxt_s;
 			i1 = atoi(xs.c_str());	;			//read configurations
 			ATABLE[szATABLE].STATES[i].CFG.resize(i1);
 
@@ -145,13 +145,13 @@ void Load1El(STRING_TYPE F, UNSIGNED_2B_TYPE szATABLE)
 				scrll_nxt_s;
 				ATABLE[szATABLE].STATES[i].CFG[k].COV_R = atof(xs.c_str());
 				scrll_nxt_s;
-				ATABLE[szATABLE].STATES[i].CFG[k].E_NGTV = atof(xs.c_str());				
-			};	
+				ATABLE[szATABLE].STATES[i].CFG[k].E_NGTV = atof(xs.c_str());
+			};
 	};
 }
 
 bool LoadElements()
-//Description:  loads information about 
+//Description:  loads information about
 //				elements: names, weights, etc
 //				also initializes OrganicElements, AlkaliMetals
 //				Metals, Halogens, AromaticityElements, Group6Elements, etc.
@@ -180,7 +180,7 @@ bool LoadElements()
 	Load1El("Si SILICON 14 28.0855 1.173 1.90 8.151 16.3 1 4 1 4 1.11 1.99", szATABLE++);
 	Load1El("P PHOSPHORUS 15 30.973763 1.10 2.19 10.486 19.7 2 3 3 1 1.10 2.20 2 1.1 2.2 3 1.1 2.2 5 2 4 1.1 2.26 5 1.1 3.13", szATABLE++);
 	Load1El("S SULFUR 16 32.066 1.04 2.58 10.36 23.3 3 2 2 1 0.94 4.48 2 1.04 2.74 4 2 3 0.94 2.79 4 1.04 2.58 6 3 3 1.04 2.58 4 1.04 2.58 6 1.04 2.58", szATABLE++);
-	
+
 	//Load1El("Cl CHLORINE 17 35.4527 0.994 3.16 12.967 23.8 1 1 1 1 0.99 3.28", szATABLE++);
 	Load1El("Cl CHLORINE 17 35.4527 0.994 3.16 12.967 23.8 4 1 1 1 0.99 3.28 3 1 4 0.99 3.28 5 1 4 0.99 3.28 7 1 4 0.99 3.28", szATABLE++);
 
@@ -192,7 +192,7 @@ bool LoadElements()
 	Load1El("V VANADIUM 23 50.9415 1.35 1.63 6.74 14.6 4 2 1 2 1.35 1.63 3 1 3 1.35 1.63 4 1 3 1.35 1.63 5 1 4 1.35 1.63", szATABLE++);
 	Load1El("Cr CHROMIUM 24 51.9961 1.40 1.66 6.766 16.5 3 2 1 2 1.40 1.66 3 1 3 1.4 1.66 6 1 6 1.4 1.66", szATABLE++);
 	Load1El("Mn MANGANESE 25 54.93805 1.40 1.55 7.435 15.6 3 2 1 2 1.40 1.55 6 1 6 1.4 1.55 7 1 6 1.4 1.55", szATABLE++);
-	
+
 	//Load1El("Fe IRON 26 55.845 1.40 1.83 7.87 16.2 2 2 1 2 1.40 1.83 3 1 3 1.4 1.83", szATABLE++);
 	Load1El("Fe IRON 26 55.845 1.40 1.83 7.87 16.2 2 2 3 2 1.40 1.83 4 1.40 1.83 6 1.40 1.83 3 3 3 1.4 1.83 4 1.4 1.83 6 1.4 1.83", szATABLE++);
 
@@ -203,13 +203,13 @@ bool LoadElements()
 	Load1El("Ga GALLIUM 31 69.723 1.30 1.81 5.999 20.5 1 3 1 3 1.30 1.77", szATABLE++);
 	Load1El("Ge GERMANIUM 32 72.61 1.22 2.01 7.899 15.9 1 4 1 4 1.22 2.06", szATABLE++);
 	Load1El("As ARSENIC 33 74.92159 1.21 2.18 9.81 18.6 2 3 1 3 1.21 2.38 5 1 4 1.21 2.69", szATABLE++);
-	
+
 	//Load1El("Se SELENIUM 34 78.96 1.17 2.55 9.752 21.2 1 2 1 2 1.17 2.54", szATABLE++);
 	Load1El("Se SELENIUM 34 78.96 1.17 2.55 9.752 21.2 3 2 2 1 1.17 2.54 2 1.17 2.54 4 2 3 1.17 2.54 4 1.17 2.54 6 3 3 1.17 2.54 4 1.17 2.54 6 1.17 2.54", szATABLE++);
-	
+
 	//Load1El("Br BROMINE 35 79.904 1.141 2.96 11.814 21.8 1 1 1 1 1.14 3.13", szATABLE++);
 	Load1El("Br BROMINE 35 79.904 1.141 2.96 11.814 21.8 4 1 1 1 1.14 3.13 3 1 4 1.14 3.13 5 1 4 1.14 3.13 7 1 4 1.14 3.13", szATABLE++);
-	
+
 	Load1El("Kr KRYPTON 36 83.80 1.10 0.00 13.999 24.4 0", szATABLE++);
 	Load1El("Rb RUBIDIUM 37 85.4678 2.35 0.82 4.177 27.3 1 1 1 1 2.35 0.82", szATABLE++);
 	Load1El("Sr STRONTIUM 38 87.62 2.00 0.95 5.695 11 1 2 1 2 2.00 0.95", szATABLE++);
@@ -227,10 +227,10 @@ bool LoadElements()
 	Load1El("Sn TIN 50 118.710 1.41 1.96 7.344 14.6 2 2 1 2 1.41 2.00 4 1 2 1.41 2.00", szATABLE++);
 	Load1El("Sb ANTIMONY 51 121.760 1.41 2.05 8.641 16.5 1 3 1 3 1.41 2.19", szATABLE++);
 	Load1El("Te TELLURIUM 52 127.60 1.40 2.10 9.009 18.6 1 4 1 4 1.40 2.10", szATABLE++);
-	
+
 	//Load1El("I IODINE 53 126.90447 1.333 2.66 10.451 19.1 1 1 1 1 1.33 2.93", szATABLE++);
 	Load1El("I IODINE 53 126.90447 1.333 2.66 10.451 19.1 4 1 1 1 1.33 2.93 3 1 4 1.33 2.93 5 1 4 1.33 2.93 7 1 4 1.33 2.93", szATABLE++);
-	
+
 	Load1El("Xe XENON 54 131.29 1.30 0.00 12.13 21.2 0", szATABLE++);
 	Load1El("Cs CESIUM 55 132.90543 2.60 0.79 3.894 25.1 1 1 1 1 2.60 0.79", szATABLE++);
 	Load1El("Ba BARIUM 56 137.327 2.15 0.89 5.212 10 1 2 1 2 2.15 0.89", szATABLE++);
@@ -297,7 +297,7 @@ bool LoadElements()
 	Group5Elements.PutInSet(ARSENIC);
 	Group5Elements.PutInSet(ANTIMONY);
 	Group5Elements.PutInSet(BISMUTH);
-	
+
 
 	Group6Elements.Dump();
 	Group6Elements.PutInSet(OXYGEN);
@@ -320,9 +320,9 @@ bool LoadElements()
 	AromaticityElements.PutInSet(SULFUR);
 	AromaticityElements.PutInSet(PHOSPHORUS);		//new addition
 	AromaticityElements.PutInSet(SELENIUM);		//new addition, May 21 2008
-	
+
 	OrganicElements = AromaticityElements;
-	OrganicElements.PutInSet(HYDROGEN);		
+	OrganicElements.PutInSet(HYDROGEN);
 
 	AromaticityElements.PutInSet(BORON);
 
@@ -330,13 +330,13 @@ bool LoadElements()
 	AlkaliMetals.PutInSet(LITHIUM);
 	AlkaliMetals.PutInSet(NATRIUM);
 	AlkaliMetals.PutInSet(POTASSIUM);
-	Metals.PutInSet(FRANCIUM);	
+	Metals.PutInSet(FRANCIUM);
 	Metals.PutInSet(RUBIDIUM);
 	Metals.PutInSet(CESIUM);
 
 	Metals = AlkaliMetals;
-	//put one high number metal ahead so it will resize set	
-	Metals.PutInSet(LAWRENCIUM);	
+	//put one high number metal ahead so it will resize set
+	Metals.PutInSet(LAWRENCIUM);
 	Metals.PutInSet(BERYLLIUM);Metals.PutInSet(MAGNESIUM);
 	Metals.PutInSet(ALUMINIUM);
 	Metals.PutInSet(CALCIUM);Metals.PutInSet(SCANDIUM);
@@ -374,13 +374,13 @@ bool LoadElements()
 	Metals.PutInSet(AMERICIUM);Metals.PutInSet(CURIUM);
 	Metals.PutInSet(BERKELIUM);Metals.PutInSet(CALIFORNIUM);
 	Metals.PutInSet(EINSTEINIUM);Metals.PutInSet(FERMIUM);
-	Metals.PutInSet(MENDELEVIUM);Metals.PutInSet(NOBELIUM);	
+	Metals.PutInSet(MENDELEVIUM);Metals.PutInSet(NOBELIUM);
 
-		
+
 	Deloc.Dump();
 	Deloc.PutInSet(AROMATIC_BOND);
 	Deloc.PutInSet(CONJ_BOND);
-	
+
 	//note, Loc must not contain TRIPLE_BOND, because of problems with delocalization\localization of it!
 	Loc.Dump();
 	Loc.PutInSet(DOUBLE_BOND);
@@ -440,7 +440,7 @@ void SetUpColors()
 {
 	UNSIGNED_2B_TYPE i;
 
-	for (i=1; i< ATABLE.length()-1; i++)	
+	for (i=1; i< ATABLE.length()-1; i++)
 		ATABLE[i].COLOR = DEFAULT_COLOR;
 
 	ATABLE[CARBON].COLOR = CARBON_COLOR;
@@ -454,7 +454,7 @@ void GeneratePrimeNumbers(apvector<UNSIGNED_4B_TYPE> &PN, UNSIGNED_4B_TYPE N)
 {
 	UNSIGNED_4B_TYPE k, l, a, b, c;
 	UNSIGNED_4B_TYPE Candidat1, Candidat2, MaxD;
-	
+
 	l = 2;
 	PN.resize(l);
 	PN[0] = 2;
@@ -467,7 +467,7 @@ void GeneratePrimeNumbers(apvector<UNSIGNED_4B_TYPE> &PN, UNSIGNED_4B_TYPE N)
 		Candidat1 = 6*k-1;
 		Candidat2 = 6*k+1;
 		MaxD = (UNSIGNED_4B_TYPE) sqrt(REALNUM_TYPE(Candidat2));
-		
+
 		for (c=2; (c<l)&&(PN[c]<=MaxD)&&(Candidat1 + Candidat2 != ZERO); c++)
 		{
 			if (Candidat1 != ZERO)
@@ -516,7 +516,7 @@ void GetTimeStamp(STRING_TYPE &S)
 	tm * st;
 	time_t secs_t = time(NULL);
 	st = localtime(&secs_t);
-	S = asctime( st );	
+	S = asctime( st );
 	S.parse_string();
 /*
 	char sbuffr[256];
@@ -559,33 +559,33 @@ bool GetFile(STRING_TYPE &file,		//default name of file and result
 			 HWND hwnd)
 {
 	char FileName[1024], filters[DEF_STRING_SIZE];
-	OPENFILENAME ofn;		
+	OPENFILENAME ofn;
 	SIGNED_4B_TYPE i, i1, j = ZERO, j1 = ZERO, result = ZERO;
 	STRING_TYPE ws;
 
 	CutStrEnding(file);	//12.09.2008 to prevent conflicts
 	sprintf(FileName, "%s", file.c_str());
 	FileName[file.length()] = char(0);
-	
+
 	strcpy(filters, "");
-	do 
+	do
 	{
 		i = filtername.find('|');
 		i1 = extention.find('|');
 		if (i == INVALID) 	i = filtername.length(); else filtername[i] = '!';
 		if (i1 == INVALID) 	i1 = extention.length(); else extention[i1] = '!';
-		
+
 		ws = filtername.substr(j,i-j);
 
 		strcat(filters, ws.c_str());
 		strcat(filters," (");
-		
+
 		ws = extention.substr(j1, i1-j1);
-		
+
 		strcat(filters, ws.c_str());
 		strcat(filters,")!");
 		strcat(filters, ws.c_str());
-		strcat(filters, "!");		
+		strcat(filters, "!");
 
 		j = i+1;
 		j1= i1+1;
@@ -593,7 +593,7 @@ bool GetFile(STRING_TYPE &file,		//default name of file and result
 
 	while (strrchr(filters, '!') != NULL)
 		*strrchr(filters, '!') = '\0';
-	
+
 	memset(&ofn, 0, sizeof(OPENFILENAME));
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = hwnd;
@@ -612,8 +612,8 @@ bool GetFile(STRING_TYPE &file,		//default name of file and result
 	};
 
 	ofn.lpstrCustomFilter = NULL;
-	ofn.lpstrFilter = (char *)&filters;	
-	ofn.lpstrTitle = Title.c_str();	
+	ofn.lpstrFilter = (char *)&filters;
+	ofn.lpstrTitle = Title.c_str();
 	ofn.lpstrFileTitle = NULL;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
 	ofn.lpstrInitialDir	= StartDirName.c_str();
@@ -623,9 +623,9 @@ bool GetFile(STRING_TYPE &file,		//default name of file and result
 	file = FileName;
 
 	if ((ofn.nFileOffset > 0) && (ofn.nFileOffset < strlen(FileName)))
-	//change Start Directory		
-		StartDirName  = file.substr(0, ofn.nFileOffset);		
-	
+	//change Start Directory
+		StartDirName  = file.substr(0, ofn.nFileOffset);
+
 	return (result != 0);
 }
 
@@ -642,26 +642,26 @@ bool PutFile(STRING_TYPE &file,		//default name of file and result
 
 	sprintf(FileName, "%s", file.c_str());
 	FileName[file.length()] = char(0);
-	
+
 	strcpy(filters, "");
-	do 
+	do
 	{
 		i = filtername.find('|');
 		i1 = extention.find('|');
 		if (i == INVALID) 	i = filtername.length(); else filtername[i] = '!';
 		if (i1 == INVALID) 	i1 = extention.length(); else extention[i1] = '!';
-		
+
 		ws = filtername.substr(j,i-j);
 
 		strcat(filters, ws.c_str());
 		strcat(filters," (");
-		
+
 		ws = extention.substr(j1, i1-j1);
-		
+
 		strcat(filters, ws.c_str());
 		strcat(filters,")!");
 		strcat(filters, ws.c_str());
-		strcat(filters, "!");		
+		strcat(filters, "!");
 
 		j = i+1;
 		j1= i1+1;
@@ -669,7 +669,7 @@ bool PutFile(STRING_TYPE &file,		//default name of file and result
 
 	while (strrchr(filters, '!') != NULL)
 		*strrchr(filters, '!') = '\0';
-	
+
 	memset(&ofn, ZERO, sizeof(OPENFILENAME));
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner = hwnd;
@@ -686,12 +686,12 @@ bool PutFile(STRING_TYPE &file,		//default name of file and result
 		else
 			ofn.lpstrDefExt = extention.c_str();
 	};
-	
+
 
 	ofn.lpstrCustomFilter = NULL;
 	ofn.lpstrFilter = (char *)&filters;
-	
-	ofn.lpstrTitle = Title.c_str();	
+
+	ofn.lpstrTitle = Title.c_str();
 	ofn.lpstrFileTitle = NULL;
 	ofn.lpstrInitialDir	= StartDirName.c_str();
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
@@ -703,7 +703,7 @@ bool PutFile(STRING_TYPE &file,		//default name of file and result
 		i = 0;
 		for (;;)
 		{
-			if (FileName[i] == '\0') 
+			if (FileName[i] == '\0')
 			{
 				FileName[i] = '\t';
 				if (FileName[i+1] == '\0') break;
@@ -715,9 +715,9 @@ bool PutFile(STRING_TYPE &file,		//default name of file and result
 	file = FileName;
 
 	if ((ofn.nFileOffset > 0) && (ofn.nFileOffset < strlen(FileName)))
-	//change Start Directory		
-		StartDirName  = file.substr(0, ofn.nFileOffset);		
-		
+	//change Start Directory
+		StartDirName  = file.substr(0, ofn.nFileOffset);
+
 	return (result != 0);
 }
 
@@ -725,7 +725,7 @@ bool PutFile(STRING_TYPE &file,		//default name of file and result
 #endif	//#ifdef WIN_PORT2
 //---------------------------------------------------------
 
-bool CheckStrEnding(STRING_TYPE &A, STRING_TYPE ends) 
+bool CheckStrEnding(STRING_TYPE &A, STRING_TYPE ends)
 //can unambiguously check file-types by means of file-extension masks
 {
 	STRING_TYPE TStr = A.substr( A.length() - ends.length(), ends.length() );
@@ -740,10 +740,10 @@ void CutStrEnding(STRING_TYPE &S)
 }
 
 REALNUM_TYPE String2Number(STRING_TYPE &L)
-//creates a string-representing number. 
+//creates a string-representing number.
 //Similar numbers correspond to similar strings (not like CRC32!)
 {
-	REALNUM_TYPE x = ZERO, ch, div = 1;	
+	REALNUM_TYPE x = ZERO, ch, div = 1;
 	for (SIGNED_4B_TYPE sc = ZERO; sc < L.length(); sc++)
 	{
 		ch = UNSIGNED_1B_TYPE(L[sc]);
@@ -762,7 +762,7 @@ void SplitString(STRING_TYPE &BASE, STRING_TYPE SEP, apvector<STRING_TYPE> &SPLI
 	STRING_TYPE B = BASE + SEP;
 	SIGNED_4B_TYPE i =0, cx =0, ix =B.find(SEP);
 	SPLIT.resize(B.length() / SEP.length());
-	do 
+	do
 	{
 		SPLIT[i++] = B.substr(cx, ix - cx);
 		cx = ix + SEP.length();
@@ -812,29 +812,29 @@ void CleanRing(Ring &r)
 	r.lRing.Dump();
 	r.setRing.Dump();
 	r.pRing.resize(ZERO);
-	r.flat  = r.arom  = 
+	r.flat  = r.arom  =
 	r.dlcl  = r.pi_s  = false;
 }
 
 void InitializeRing(Ring &r)
-{	
-	r.setRing.Dump();	
+{
+	r.setRing.Dump();
 	r.done = 0;
 	r.lRing.Dump();
 
 	for (SIGNED_4B_TYPE n=0; n<r.pRing.length(); n++)
-	{			
-			r.setRing.PutInSet(r.pRing[n]);	
+	{
+			r.setRing.PutInSet(r.pRing[n]);
 			r.lRing.Insert(r.pRing[n]);
 			r.lRing.Next();
 	}//for n
 }
 
 void InitializeRings(apvector<Ring> &rgs)
-{	
+{
 	SIGNED_4B_TYPE rC = rgs.length();
 	for (SIGNED_4B_TYPE m = 0; m<rC; m++)
-		InitializeRing(rgs[m]);	
+		InitializeRing(rgs[m]);
 }
 
 void FindRingSystems(apvector<Ring> &rr, apvector<SIGNED_4B_TYPE> &ss, UNSIGNED_1B_TYPE MinIntersection)
@@ -859,40 +859,40 @@ void FindRingSystems(apvector<Ring> &rr, apvector<SIGNED_4B_TYPE> &ss, UNSIGNED_
 		ss[m] = m;
 		sysets[m] = rr[m].setRing;
 	}
-		
-	do 
+
+	do
 	{
 		Chan= false;
-		
-		for (m = ZERO; m < rC; m++)			
+
+		for (m = ZERO; m < rC; m++)
 		{
-			if (sysets[m].IsEmpty()) 
+			if (sysets[m].IsEmpty())
 				continue;
 
 			for (n = m + 1; n < rC; n++)
 			{
-				if (sysets[n].IsEmpty()) 
+				if (sysets[n].IsEmpty())
 					continue;
 
-				if (ss[m] == ss[n]) 
+				if (ss[m] == ss[n])
 					continue;
 
 				tS = sysets[m] & sysets[n];
-				if (tS.Size() < MinIntersection) 
+				if (tS.Size() < MinIntersection)
 					continue;
 
 				sysets[m] |= sysets[n];
 				sysets[n].Dump();
 				ss[n] = ss[m];
-				
-				Chan = true;					
+
+				Chan = true;
 			}//for n
 		} //for m
-		
+
 	} while (Chan);
 
-	//now, clean up leftovers 
-	do 
+	//now, clean up leftovers
+	do
 	{
 		Chan = false;
 		for (n = 0; n < rC; n++)
@@ -913,32 +913,32 @@ void FinalizeRings(apvector<Ring> &rngs, apvector<SIGNED_4B_TYPE> &ss, SIGNED_4B
 //
 //N_MOL:				molecule's number of atoms
 //
-//precondition:			prior to calling this function, rngs[] info 
+//precondition:			prior to calling this function, rngs[] info
 //						must be filled by InitializeRings() and FindRingSystems()
 //						rngs[] should not have internal edges in them:
 //						such edge is a bond between ring's atoms that does not belong to the ring
 {
-	apvector<CEdge> Edges;	//pool of edges in a ring system	
+	apvector<CEdge> Edges;	//pool of edges in a ring system
 	apvector<set> Ats;		//sets of edges for each atom
 	apvector<SIGNED_4B_TYPE> tmp, cuRsys, satoms, smr_stack(DEFAULT_LARGE_CYCLE);
 	apvector<set> smr_stack_s(DEFAULT_LARGE_CYCLE);
-	
+
 	set alfa, lried, smr;	//work sets
 	UNSIGNED_2B_TYPE crsysN, rsysN, rs;
 	SIGNED_4B_TYPE m, n, l, newrC, rC = rngs.length(), aC, smrl, ixa;
 	bool rfound, cfound;
-	
+
 	//first, extract all the stored ring systems ranks
 	for (m = ZERO; m < rC; m++)
 		alfa.PutInSet(ss[m]);
-	
+
 	alfa.GetList(tmp);
 	rsysN = tmp.length();
 	for (rs = ZERO; rs < rsysN; rs++)
 		for (m = ZERO; m < rC; m++)
 			if (ss[m] == tmp[rs])
 				//explicitly rewrite ranks into the simple increasing order
-				ss[m] = rs;	
+				ss[m] = rs;
 	//-------------------------------------------------
 
 
@@ -952,36 +952,36 @@ if (SupressMessages)
 
 	newrC = rC;
 	for (rs = ZERO; rs < rsysN; rs++)
-	{		
+	{
 		alfa.Dump();	//store all the rings of the ring system rs
 		for (m = ZERO; m < rC; m++)
 			if (ss[m] == rs)
 				alfa.PutInSet(m);
 		alfa.GetList(cuRsys);
-	
+
 		crsysN = cuRsys.length();
-		if (crsysN == 1)//only one ring in the ring system, skip it.		
+		if (crsysN == 1)//only one ring in the ring system, skip it.
 			continue;
 
 
-		
+
 		MinimizeRings(rngs, cuRsys);
 
-		
+
 
 		//get all the atoms of the ring system
 		alfa.Dump();
 		for (m = ZERO; m<crsysN; m++)
 			for (l = ZERO; l < rngs[cuRsys[m]].pRing.length(); l++)
 				alfa.PutInSet(rngs[cuRsys[m]].pRing[l]);
-		
+
 		alfa.GetList(satoms);	//list of atoms in the current ring system
 		aC = satoms.length();	//# number of atoms in the current ring system
 		//---------------------------------------------------
-		
 
 
-		//---------------------------------------------------------		
+
+		//---------------------------------------------------------
 		Edges.resize(aC + crsysN);//estimate of # of edges in the current ryng system. +1 is added for the currently analized edge
 		Ats.resize(ZERO);
 		Ats.resize(N_MOL);		  //info about the edges pertaining to each atom
@@ -989,12 +989,12 @@ if (SupressMessages)
 		//now, generate all rings' edges
 		for (m = ZERO; m < crsysN; m++)
 		{
-			n = rngs[cuRsys[m]].pRing.length();			
+			n = rngs[cuRsys[m]].pRing.length();
 			while (n > ZERO)
 			{
 				n--;
 				Edges[l].A1 = rngs[cuRsys[m]].lRing.Curr();
-				Edges[l].A2 = rngs[cuRsys[m]].lRing.Next();				
+				Edges[l].A2 = rngs[cuRsys[m]].lRing.Next();
 
 				alfa = Ats[Edges[l].A1] & Ats[Edges[l].A2];
 				if (alfa.IsEmpty())
@@ -1005,13 +1005,13 @@ if (SupressMessages)
 				}
 			}
 		}// for m
-		
+
 		if (l < Edges.length()) //to remove last, temporary, working edge, if necessary
 			Edges.resize(l);
 		//---------------------------------------------------------
-				
 
-		//let us find all small rings in the current ring system		
+
+		//let us find all small rings in the current ring system
 		lried.Dump();
 		for (l = ZERO; l < aC - 1; l++)
 		{//no need to explore last atom
@@ -1019,8 +1019,8 @@ if (SupressMessages)
 			smr.PutInSet(satoms[l]);
 			smr_stack[ZERO] = satoms[l];
 			smr_stack_s[ZERO] = Ats[satoms[l]];
-			smrl = 1;			
-				
+			smrl = 1;
+
 			while (smrl)
 			{
 				smr_stack_s[smrl - 1].GetList(tmp);
@@ -1034,14 +1034,14 @@ if (SupressMessages)
 
 					if (lried.IsInSet(ixa))
 						continue;
-					
+
 					if (smr.IsInSet(ixa))
-					{//ring is found				
+					{//ring is found
 						if (smr_stack[smrl - 2] == ixa)
 							continue;
 
 						cfound = false;
-						
+
 						//check if no internal edges
 						if (ixa == satoms[l]) //true ring
 							rfound = true;
@@ -1050,8 +1050,8 @@ if (SupressMessages)
 							rfound = false;	  //needed to prevent 1-edge bridged rings
 							break;
 						}
-						
-						continue;					
+
+						continue;
 					};
 					cfound = true;
 					smr_stack[smrl] = ixa;
@@ -1061,21 +1061,21 @@ if (SupressMessages)
 				if (rfound)
 				{
 					cfound = false;
-					//check if it already exists (enough if by vertices, 
+					//check if it already exists (enough if by vertices,
 					//because of we avoid the cycles with single edge bridges
 					//NOTE: we assume the rings in rngs[] do not have internal edges
-					//(a bond between ring's atoms that does not belong to the ring)					
-					
+					//(a bond between ring's atoms that does not belong to the ring)
+
 					//NB(when crsysN was of UNSIGNED_4B_TYPE, it induced
 					//type conversion compiler error below, but only in release mode)
 					for (m = ZERO; m < crsysN; m++)
 						if (rngs[cuRsys[m]].pRing.length() == smrl)
 						{
 							alfa = smr | rngs[cuRsys[m]].setRing;
-							if (alfa.Size() == smrl) //same					
+							if (alfa.Size() == smrl) //same
 								break;
 						}
-					
+
 					if (m == crsysN) //new ring
 					{
 						if (rngs.length() == newrC)
@@ -1097,7 +1097,7 @@ if (SupressMessages)
 					smr.PutInSet(smr_stack[smrl]);
 					smr_stack_s[smrl] = Ats[smr_stack[smrl]];	//copy fresh edges
 					smrl++;
-					
+
 				}
 				else
 				{//backtrack
@@ -1107,11 +1107,11 @@ if (SupressMessages)
 			}//while smrl stack, looking for all small rings in the ring system
 
 			lried.PutInSet(satoms[l]);	//remove from further searches
-		};//for l		
+		};//for l
 
 
 		//-------------------  sort all rings by size, in ascending order
-		do 
+		do
 		{
 			cfound = false;
 
@@ -1136,12 +1136,12 @@ if (SupressMessages)
 		Message(S1, true);
 
 		for (m = ZERO; m < crsysN; m++)
-		{		
+		{
 			S2  = cuRsys[m];
 			S3  = rngs[cuRsys[m]].pRing.length();
-			S1  = "ring N"; S1 += S2; 
+			S1  = "ring N"; S1 += S2;
 			S1 += ", length = "; 	S1 += S3; 	S1 += ", atoms:";
-			
+
 			for (n = ZERO; n < rngs[cuRsys[m]].pRing.length(); n++)
 			{
 				S2 = rngs[cuRsys[m]].pRing[n]);
@@ -1152,7 +1152,7 @@ if (SupressMessages)
 		}
 	}
 */
-		
+
 	}//for rs;
 	rngs.resize(newrC);
 }//FinalizeRings()
@@ -1160,11 +1160,11 @@ if (SupressMessages)
 
 
 void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
-//description:			minimizes given set of rings, specified by rings[] 
+//description:			minimizes given set of rings, specified by rings[]
 //						and Atomlist[]. The latter usually should point to
 //						subset of rings that constitute a single ring-system
 //
-//precondition:			prior to call of this function, rings[] info 
+//precondition:			prior to call of this function, rings[] info
 //						must be filled by InitializeRings()
 //
 //NOTE:					Normally, should be called from FinalizeRings() only.
@@ -1175,9 +1175,9 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 	set Rset;
 	UNSIGNED_4B_TYPE lng;
 	bool Change;
-	
+
 	do 	{
-			Change = false;		
+			Change = false;
 
 			//minimize rings
 			for (m=0; m<rC; m++)
@@ -1192,7 +1192,7 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 					if (2*IntersectionSize <= rings[Atomlist[m]].setRing.Size())
 					//no sufficient overlap
 						continue;
-					
+
 
 					////////////////////////////////////////////////////////
 					//check the integrity of intersection
@@ -1200,31 +1200,31 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 					//////
 					//1. ring n (larger one!)
 					//move on the atom which belongs to intersection
-					while (!Rset.IsInSet(rings[Atomlist[n]].lRing.Next()));					
+					while (!Rset.IsInSet(rings[Atomlist[n]].lRing.Next()));
 					//find in the ring's terminal atom of the intersection
 					while (Rset.IsInSet(rings[Atomlist[n]].lRing.Next()));
 					currI = rings[Atomlist[n]].lRing.Prev();
-					
+
 					//synchronize m's ring current pointer accordingly
 					while (rings[Atomlist[m]].lRing.Next() != currI);
 					//compare intersection atoms step-by-step
 					lng = 1;
-					while (rings[Atomlist[n]].lRing.Prev() 
+					while (rings[Atomlist[n]].lRing.Prev()
 							== rings[Atomlist[m]].lRing.Prev())	lng++;
 					if (lng == 1)
 					{
 						rings[Atomlist[n]].lRing.Next();
 						rings[Atomlist[m]].lRing.Next();
-						while (rings[Atomlist[n]].lRing.Prev() 
+						while (rings[Atomlist[n]].lRing.Prev()
 						== rings[Atomlist[m]].lRing.Next())	lng++;
 					}
-					
+
 					if (SIGNED_4B_TYPE(lng) != IntersectionSize) //improper intersection
 						continue;
 					////////////////////////////////////////////////////////
 
 
-							
+
 					if (IntersectionSize != rings[Atomlist[m]].pRing.length())
 					{
 							currI = rings[Atomlist[m]].lRing.Curr();
@@ -1235,7 +1235,7 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 
 						pointA = rings[Atomlist[m]].lRing.GetCurItem();
 					}
-					else					
+					else
 					{
 						currI = rings[Atomlist[n]].lRing.Curr();
 
@@ -1254,13 +1254,13 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 
 					//find second joint
 					while (rings[Atomlist[n]].setRing.IsInSet(pointB->index) && rings[Atomlist[m]].setRing.IsInSet(pointB->index))
-						pointB = pointB->fw_ptr; 
+						pointB = pointB->fw_ptr;
 
 					pointB = pointB->bk_ptr;
 
-					
+
 					currI = rings[Atomlist[n]].lRing.Curr();
-					while (currI != pointA->index)						
+					while (currI != pointA->index)
 						currI = rings[Atomlist[n]].lRing.Next();
 
 					OldRingSize = rings[Atomlist[n]].pRing.length();
@@ -1280,7 +1280,7 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 							rings[Atomlist[n]].pRing[lng] = currI;
 						} while(!rings[Atomlist[m]].setRing.IsInSet(currI));
 					}
-					else						
+					else
 					{//change direction
 						rings[Atomlist[n]].lRing.Prev();
 						do
@@ -1292,22 +1292,22 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 
 						} while(!rings[Atomlist[m]].setRing.IsInSet(currI));
 					};
-					 					
+
 					if (rings[Atomlist[m]].pRing.length() != IntersectionSize)
 					{
 						//copy sequence from ring m (from marginB to marginA)
 						currI = rings[Atomlist[m]].lRing.Curr();
 						while (currI != pointB->index)
 							currI = rings[Atomlist[m]].lRing.Next();
-						
+
 						if (!rings[Atomlist[n]].setRing.IsInSet(rings[Atomlist[m]].lRing.Next()))
-						{							
+						{
 							currI = rings[Atomlist[m]].lRing.Curr();
 							do
 							{
 								lng = rings[Atomlist[n]].pRing.length();
 								rings[Atomlist[n]].pRing.resize(lng+1);
-								rings[Atomlist[n]].pRing[lng] = currI;								
+								rings[Atomlist[n]].pRing[lng] = currI;
 
 								currI = rings[Atomlist[m]].lRing.Next();
 							}while (currI != pointA->index);
@@ -1317,16 +1317,16 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 							rings[Atomlist[m]].lRing.Prev();
 							currI = rings[Atomlist[m]].lRing.Prev();
 							do
-							{				
+							{
 								lng = rings[Atomlist[n]].pRing.length();
 								rings[Atomlist[n]].pRing.resize(lng+1);
-								rings[Atomlist[n]].pRing[lng] = currI;								
+								rings[Atomlist[n]].pRing[lng] = currI;
 
-								currI = rings[Atomlist[m]].lRing.Prev();							
+								currI = rings[Atomlist[m]].lRing.Prev();
 							}while (currI != pointA->index);
 
-						};						
-						
+						};
+
 					};//if (rings[Atomlist[m]].pRing.length() != IntersectionSize)
 
 					if (OldRingSize <= rings[Atomlist[n]].pRing.length())
@@ -1339,26 +1339,26 @@ void MinimizeRings(apvector<Ring> &rings, apvector<SIGNED_4B_TYPE> &Atomlist)
 							rings[Atomlist[n]].pRing[l] = currI;
 							currI= rings[Atomlist[n]].lRing.Next();
 						};
-						continue;						
+						continue;
 					};
-					
-					Change = true;							
 
-					//now we have new ring array in rings[Atomlist[n]].pRing, 
+					Change = true;
+
+					//now we have new ring array in rings[Atomlist[n]].pRing,
 					//we should reinitilize auxiliary structures
 					InitializeRing(rings[Atomlist[n]]);
-					
+
 					//------- end of reorganizing the ring n --------
-					
+
 				};//for m,n
 
-			}while (Change);	
+			}while (Change);
 }
 
 UNSIGNED_4B_TYPE randomNumber(UNSIGNED_4B_TYPE limit)
 {// Assumes limit <= RAND_MAX
     UNSIGNED_4B_TYPE n;
-    UNSIGNED_4B_TYPE mask = 0xFFFFFFFF;		
+    UNSIGNED_4B_TYPE mask = 0xFFFFFFFF;
     while (mask > (limit << 1)) mask >>= 1;	//remove unneeded bits
 
     do {
@@ -1377,9 +1377,9 @@ UNSIGNED_4B_TYPE GetRandomNumber(UNSIGNED_4B_TYPE limit)
 {
 	UNSIGNED_4B_TYPE n, b;
     UNSIGNED_4B_TYPE mask = 0xFFFFFFFF;
-	
+
 	if (limit == RAND_MAX) return rand();
-	
+
 	if (limit < RAND_MAX)
 	{
 		while (mask > (limit << 1)) mask >>= 1;	//remove unneeded bits
@@ -1392,11 +1392,11 @@ UNSIGNED_4B_TYPE GetRandomNumber(UNSIGNED_4B_TYPE limit)
 	}
 
 	//below are the handling mostly for Windows platform
-	n = RAND_MAX; 
+	n = RAND_MAX;
 	b = 0;
 	mask = 1;
 	while (limit > n) { n <<= 1; n++; b++; mask <<= 1; mask++; };
-	
+
 	for(;;)
 	{
 		n = rand();
@@ -1414,8 +1414,8 @@ void SortRandomly (apvector<REALNUM_TYPE> &V)
 	QSortScore = F;
 	for (; ic < N; ic++)
 	{
-		A[ic] = ic;	
-		F[ic] = (REALNUM_TYPE)rand(); 
+		A[ic] = ic;
+		F[ic] = (REALNUM_TYPE)rand();
 	}
 	qsort(A, (size_t)N, sizeof(SIGNED_4B_TYPE), QSortCompareGreater);
 	DROP_MEM_BLOCKS(F);
@@ -1430,24 +1430,24 @@ void SortRandomly (apvector<REALNUM_TYPE> &V)
 //QSort paraphernalia
 REALNUM_TYPE *QSortScore = NULL;
 int QSortCompareGreater(const void *arg1, const void *arg2)
-{   
+{
    if (QSortScore == NULL)
 		return ZERO;
 
    if (QSortScore[* ( UNSIGNED_4B_TYPE* ) arg1] >  QSortScore[* ( UNSIGNED_4B_TYPE* ) arg2])
 		return 1;
-   
+
    return -1;
 }
 
 int QSortCompareLess(const void *arg1, const void *arg2)
-{   
+{
    if (QSortScore == NULL)
 		return ZERO;
 
    if (QSortScore[* ( UNSIGNED_4B_TYPE* ) arg1] <  QSortScore[* ( UNSIGNED_4B_TYPE* ) arg2])
 		return 1;
-   
+
    return -1;
 }
 
@@ -1459,7 +1459,7 @@ void BubbleSort(apvector<REALNUM_TYPE> &x, apvector<SIGNED_4B_TYPE> &a)
 {
 	bool SwapFlag;
 	SIGNED_4B_TYPE j;
-	
+
 	if (x.length() != a.length())
 		return;
 
@@ -1479,7 +1479,7 @@ void BubbleSort(apvector<REALNUM_TYPE> &x, apvector<SIGNED_4B_TYPE> &a)
 }
 
 
-UNSIGNED_4B_TYPE CRC32Table[256] = 
+UNSIGNED_4B_TYPE CRC32Table[256] =
 { 0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA,
   0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
   0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988,
@@ -1557,16 +1557,16 @@ UNSIGNED_4B_TYPE GetCRC32 (const GENERIC_POINTER p, UNSIGNED_4B_TYPE len)
 //
 // 3.	XOR the CRC register with the contents of CRC32Table[t]
 {
-  
+
   UNSIGNED_4B_TYPE CRCr = 0xFFFFFFFF;
   UNSIGNED_1B_TYPE * q = (UNSIGNED_1B_TYPE *)p, t;
-  
+
   for (UNSIGNED_4B_TYPE i = ZERO;i < len; i++)
   {
 	t  = *q++;
 	t ^= (CRCr & 0xFF);
     CRCr >>= 8;
-	CRCr ^= CRC32Table[t];    
+	CRCr ^= CRC32Table[t];
   }
 
   return CRCr;
@@ -1586,7 +1586,7 @@ SIGNED_4B_TYPE FindArrPoz(apvector<SIGNED_4B_TYPE> &ARR, SIGNED_4B_TYPE V)
 	};
 
 	if (ARR[a]> V) return INVALID;
-	if (ARR[a] == V) return a;	
+	if (ARR[a] == V) return a;
 	return e;
 }
 
@@ -1596,19 +1596,19 @@ bool GetCombination(set &setBase, set &setCmb, UNSIGNED_2B_TYPE k)
 	apvector<SIGNED_4B_TYPE> b, c;
 	setBase.GetList(b);
 	setCmb.GetList(c);
-	
+
 	bool res = GetCombination(b, c, k);
 	if (res) setCmb = c; else setCmb.Dump();
 	return res;
 }
 
 bool GetCombination(apvector<SIGNED_4B_TYPE> &Base, apvector<SIGNED_4B_TYPE> &Cmb, UNSIGNED_2B_TYPE k)
-/*description:	returns in Cmb a combination of k elements from Base, 
+/*description:	returns in Cmb a combination of k elements from Base,
 				if Cmb is not empty and has k-size then it is used
 				as a current combination to get the next one
  postcondition:
 				returns true if new combination was created in Cmb
- precondition:				
+ precondition:
 				first call should have 0 < k < set-size.
 				consecutive calls should have k = 0 and Cmb of k-size;
 */
@@ -1637,7 +1637,7 @@ bool GetCombination(apvector<SIGNED_4B_TYPE> &Base, apvector<SIGNED_4B_TYPE> &Cm
 		C1++;
 		B = FindArrPoz(Base, Cmb[C - C1]);
 		if (B < 0) break; //should not happen!
-		if ( (B + C1) < N ) 
+		if ( (B + C1) < N )
 		{
 			while (C1)	Cmb[C - C1--] = Base[++B];
 			return true;
@@ -1681,7 +1681,7 @@ char CheckResidue(STRING_TYPE residue)
 	if (r.find(TYR_) == 0) return TYR1;
 	if (r.find(VAL_) == 0) return VAL1;
 
-	///nucleotides, 
+	///nucleotides,
 	//modified bases have '+' in front
 	if (r.find("A") == 0) return N_A;
 	if (r.find("C") == 0) return N_C;

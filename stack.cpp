@@ -6,7 +6,7 @@
 
 //-------   memory leaks catcher for the current source-file  --------
 #ifdef ADV_LEAK_CATCHER
-#ifdef _DEBUG 
+#ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
@@ -37,7 +37,7 @@ UNSIGNED_4B_TYPE stack::Pop()
 {
 	UNSIGNED_4B_TYPE L = S.length();
 	UNSIGNED_4B_TYPE C = ZERO;
-	
+
 	if (L > ZERO)
 	{
 		C = S[L-1];
